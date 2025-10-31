@@ -14,5 +14,7 @@ namespace PortalDGC.Domain.Entities
         public string? DocumentoRespaldo { get; set; }
         public decimal PuntajeObtenido { get; set; }
         public bool Verificado { get; set; }
+        public virtual Inscripcion Inscripcion { get; set; } = null!;
+        public virtual ItemPuntuable ItemPuntuable { get; set; } = null!;
     }
 }

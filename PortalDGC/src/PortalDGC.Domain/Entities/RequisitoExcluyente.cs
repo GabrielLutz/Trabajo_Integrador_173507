@@ -13,5 +13,7 @@ namespace PortalDGC.Domain.Entities
         public string Descripcion { get; set; } = string.Empty;
         public string Tipo { get; set; } = string.Empty;
         public bool Obligatorio { get; set; }
+        public virtual Llamado Llamado { get; set; } = null!;
+        public virtual ICollection<RequisitoPostulante> RequisitosPostulante { get; set; } = new List<RequisitoPostulante>();
     }
 }

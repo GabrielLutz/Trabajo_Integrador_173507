@@ -14,5 +14,7 @@ namespace PortalDGC.Domain.Entities
         public string Descripcion { get; set; } = string.Empty;
         public decimal PuntajeMaximo { get; set; }
         public string Categoria { get; set; } = string.Empty;
+        public virtual Llamado Llamado { get; set; } = null!;
+        public virtual ICollection<MeritoPostulante> MeritosPostulante { get; set; } = new List<MeritoPostulante>();
     }
 }

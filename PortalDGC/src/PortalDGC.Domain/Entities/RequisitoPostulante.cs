@@ -13,5 +13,7 @@ namespace PortalDGC.Domain.Entities
         public int RequisitoId { get; set; }
         public bool Cumple { get; set; }
         public string? Observaciones { get; set; }
+        public virtual Inscripcion Inscripcion { get; set; } = null!;
+        public virtual RequisitoExcluyente Requisito { get; set; } = null!;
     }
 }

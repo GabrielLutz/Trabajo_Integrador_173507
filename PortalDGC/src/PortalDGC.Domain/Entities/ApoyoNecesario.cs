@@ -12,5 +12,7 @@ namespace PortalDGC.Domain.Entities
         public int LlamadoId { get; set; }
         public string Descripcion { get; set; } = string.Empty;
         public string Tipo { get; set; } = string.Empty;
+        public virtual Llamado Llamado { get; set; } = null!;
+        public virtual ICollection<ApoyoSolicitado> ApoyosSolicitados { get; set; } = new List<ApoyoSolicitado>();
     }
 }

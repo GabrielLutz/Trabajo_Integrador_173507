@@ -13,5 +13,6 @@ namespace PortalDGC.Domain.Entities
         public bool EsAfrodescendiente { get; set; }
         public bool EsTrans { get; set; }
         public bool TieneDiscapacidad { get; set; }
+        public virtual Inscripcion Inscripcion { get; set; } = null!;
     }
 }
