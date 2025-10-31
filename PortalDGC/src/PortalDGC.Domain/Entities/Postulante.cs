@@ -22,5 +22,7 @@ namespace PortalDGC.Domain.Entities
         public string? DocumentoCedula { get; set; }
         public DateTime FechaCreacion { get; set; }
         public bool Activo { get; set; }
+        public virtual ICollection<Inscripcion> Inscripciones { get; set; } = new List<Inscripcion>();
+        public virtual ICollection<Constancia> Constancias { get; set; } = new List<Constancia>();
     }
 }
