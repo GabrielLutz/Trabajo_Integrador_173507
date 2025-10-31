@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Llamado\" />
+    <Folder Include="Inscripcion\" />
+    <Folder Include="Postulante\" />
+  </ItemGroup>
+
 </Project>
