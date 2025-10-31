@@ -19,5 +19,10 @@ namespace PortalDGC.Domain.Entities
         public decimal PorcentajeTrans { get; set; }
         public decimal PorcentajeDiscapacidad { get; set; }
         public string Estado { get; set; } = string.Empty;
+        public virtual ICollection<LlamadoDepartamento> LlamadoDepartamentos { get; set; } = new List<LlamadoDepartamento>();
+        public virtual ICollection<Inscripcion> Inscripciones { get; set; } = new List<Inscripcion>();
+        public virtual ICollection<RequisitoExcluyente> RequisitosExcluyentes { get; set; } = new List<RequisitoExcluyente>();
+        public virtual ICollection<ItemPuntuable> ItemsPuntuables { get; set; } = new List<ItemPuntuable>();
+        public virtual ICollection<ApoyoNecesario> ApoyosNecesarios { get; set; } = new List<ApoyoNecesario>();
     }
 }

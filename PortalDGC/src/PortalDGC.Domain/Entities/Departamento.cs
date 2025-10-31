@@ -12,5 +12,7 @@ namespace PortalDGC.Domain.Entities
         public string Nombre { get; set; } = string.Empty;
         public string Codigo { get; set; } = string.Empty;
         public bool Activo { get; set; }
+        public virtual ICollection<LlamadoDepartamento> LlamadoDepartamentos { get; set; } = new List<LlamadoDepartamento>();
+        public virtual ICollection<Inscripcion> Inscripciones { get; set; } = new List<Inscripcion>();
     }
 }
