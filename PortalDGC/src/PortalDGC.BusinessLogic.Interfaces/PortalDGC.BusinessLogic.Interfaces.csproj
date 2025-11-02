@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PortalDGC.Dtos\PortalDGC.Dtos.csproj" />
+  </ItemGroup>
+
 </Project>
