@@ -1,4 +1,6 @@
-﻿using PortalDGC.DataAccess.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using PortalDGC.DataAccess.Data;
+using PortalDGC.DataAccess.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,34 +11,50 @@ namespace PortalDGC.DataAccess.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        public Task<T> AddAsync(T entity)
+        protected readonly ApplicationDbContext _context;
+        protected readonly DbSet<T> _dbSet;
+
+        public Repository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+            _dbSet = context.Set<T>();
         }
 
-        public Task DeleteAsync(int id)
+        public virtual async Task<T> AddAsync(T entity)
         {
-            throw new NotImplementedException();
+            await _dbSet.AddAsync(entity);
+            return entity;
         }
 
-        public Task<bool> ExistsAsync(int id)
+        public virtual async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
+            {
+                _dbSet.Remove(entity);
+            }
         }
 
-        public Task<IEnumerable<T>> GetAllAsync()
+        public virtual async Task<bool> ExistsAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await GetByIdAsync(id);
+            return entity != null;
         }
 
-        public Task<T?> GetByIdAsync(int id)
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbSet.ToListAsync();
         }
 
-        public Task UpdateAsync(T entity)
+        public virtual async Task<T?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.FindAsync(id);
+        }
+
+        public virtual async Task UpdateAsync(T entity)
+        {
+            _dbSet.Update(entity);
+            await Task.CompletedTask;
         }
     }
 }
