@@ -1,9 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PortalDGC.BusinessLogic.Interfaces\PortalDGC.BusinessLogic.Interfaces.csproj" />
+    <ProjectReference Include="..\PortalDGC.BusinessLogic\PortalDGC.BusinessLogic.csproj" />
+    <ProjectReference Include="..\PortalDGC.DataAccess\PortalDGC.DataAccess.csproj" />
+  </ItemGroup>
 
 </Project>
