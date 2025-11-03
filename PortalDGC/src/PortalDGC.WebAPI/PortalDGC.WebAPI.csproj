@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\PortalDGC.BusinessLogic.Interfaces\PortalDGC.BusinessLogic.Interfaces.csproj" />
     <ProjectReference Include="..\PortalDGC.BusinessLogic\PortalDGC.BusinessLogic.csproj" />
     <ProjectReference Include="..\PortalDGC.DataAccess\PortalDGC.DataAccess.csproj" />
