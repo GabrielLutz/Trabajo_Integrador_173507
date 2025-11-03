@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PortalDGC.BusinessLogic.Interfaces\PortalDGC.BusinessLogic.Interfaces.csproj" />
+    <ProjectReference Include="..\PortalDGC.DataAccess.Interfaces\PortalDGC.DataAccess.Interfaces.csproj" />
+  </ItemGroup>
+
 </Project>
