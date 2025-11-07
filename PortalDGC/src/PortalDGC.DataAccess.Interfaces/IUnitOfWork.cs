@@ -20,6 +20,11 @@ namespace PortalDGC.DataAccess.Interfaces
         IApoyoNecesarioRepository ApoyosNecesarios { get; }
         IApoyoSolicitadoRepository ApoyosSolicitados { get; }
         IConstanciaRepository Constancias { get; }
+        IPruebaRepository Pruebas { get; }
+        IEvaluacionPruebaRepository EvaluacionesPruebas { get; }
+        IEvaluacionMeritoRepository EvaluacionesMeritos { get; }
+        IOrdenamientoRepository Ordenamientos { get; }
+        IPosicionOrdenamientoRepository PosicionesOrdenamiento { get; }
 
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync();

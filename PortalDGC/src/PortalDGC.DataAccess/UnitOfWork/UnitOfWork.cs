@@ -2,6 +2,7 @@
 using PortalDGC.DataAccess.Data;
 using PortalDGC.DataAccess.Interfaces;
 using PortalDGC.DataAccess.Repositories;
+using PortalDGC.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,11 @@ namespace PortalDGC.DataAccess.UnitOfWork
             ApoyosNecesarios = new ApoyoNecesarioRepository(_context);
             ApoyosSolicitados = new ApoyoSolicitadoRepository(_context);
             Constancias = new ConstanciaRepository(_context);
+            Pruebas = new PruebaRepository(_context);
+            EvaluacionesPruebas = new EvaluacionPruebaRepository(_context);
+            EvaluacionesMeritos = new EvaluacionMeritoRepository(_context);
+            Ordenamientos = new OrdenamientoRepository(_context);
+            PosicionesOrdenamiento = new PosicionOrdenamientoRepository(_context);
         }
         public IPostulanteRepository Postulantes { get; private set; }
         public ILlamadoRepository Llamados { get; private set; }
@@ -43,6 +49,11 @@ namespace PortalDGC.DataAccess.UnitOfWork
         public IApoyoNecesarioRepository ApoyosNecesarios { get; private set; }
         public IApoyoSolicitadoRepository ApoyosSolicitados { get; private set; }
         public IConstanciaRepository Constancias { get; private set; }
+        public IPruebaRepository Pruebas { get; private set; }
+        public IEvaluacionPruebaRepository EvaluacionesPruebas { get; private set; }
+        public IEvaluacionMeritoRepository EvaluacionesMeritos { get; private set; }
+        public IOrdenamientoRepository Ordenamientos { get; private set; }
+        public IPosicionOrdenamientoRepository PosicionesOrdenamiento { get; private set; }
 
         public async Task BeginTransactionAsync()
         {
