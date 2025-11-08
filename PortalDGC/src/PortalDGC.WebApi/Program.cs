@@ -44,6 +44,7 @@ builder.Services.AddScoped<IDepartamentoService, DepartamentoService>();
 builder.Services.AddScoped<IConstanciaService, ConstanciaService>();
 builder.Services.AddScoped<IValidacionService, ValidacionService>();
 builder.Services.AddScoped<IArchivoService, ArchivoService>();
+builder.Services.AddScoped<ITribunalService, TribunalService>();
 
 // CORS
 builder.Services.AddCors(options =>
