@@ -27,6 +27,11 @@ namespace PortalDGC.DataAccess.Data
         public DbSet<ApoyoNecesario> ApoyosNecesarios { get; set; }
         public DbSet<ApoyoSolicitado> ApoyosSolicitados { get; set; }
         public DbSet<Constancia> Constancias { get; set; }
+        public DbSet<Prueba> Pruebas { get; set; }
+        public DbSet<EvaluacionPrueba> EvaluacionesPruebas { get; set; }
+        public DbSet<EvaluacionMerito> EvaluacionesMeritos { get; set; }
+        public DbSet<Ordenamiento> Ordenamientos { get; set; }
+        public DbSet<PosicionOrdenamiento> PosicionesOrdenamiento { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -200,6 +205,92 @@ namespace PortalDGC.DataAccess.Data
                     .WithMany(p => p.Constancias)
                     .HasForeignKey(e => e.PostulanteId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Prueba>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Tipo).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.Nombre).IsRequired().HasMaxLength(200);
+                entity.Property(e => e.Estado).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.PuntajeMaximo).HasPrecision(10, 2);
+
+                entity.HasOne(e => e.Llamado)
+                    .WithMany(l => l.Pruebas)
+                    .HasForeignKey(e => e.LlamadoId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(e => new { e.LlamadoId, e.OrdenEjecucion });
+            });
+
+            modelBuilder.Entity<EvaluacionPrueba>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.PuntajeObtenido).HasPrecision(10, 2);
+
+                entity.HasOne(e => e.Inscripcion)
+                    .WithMany(i => i.EvaluacionesPruebas)
+                    .HasForeignKey(e => e.InscripcionId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Prueba)
+                    .WithMany(p => p.EvaluacionesPruebas)
+                    .HasForeignKey(e => e.PruebaId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(e => new { e.InscripcionId, e.PruebaId }).IsUnique();
+            });
+
+            modelBuilder.Entity<EvaluacionMerito>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.PuntajeAsignado).HasPrecision(10, 2);
+                entity.Property(e => e.Estado).IsRequired().HasMaxLength(50);
+
+                entity.HasOne(e => e.MeritoPostulante)
+                    .WithMany(mp => mp.EvaluacionesMerito)
+                    .HasForeignKey(e => e.MeritoPostulanteId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(e => e.MeritoPostulanteId).IsUnique();
+            });
+
+            modelBuilder.Entity<Ordenamiento>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Tipo).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.Estado).IsRequired().HasMaxLength(50);
+
+                entity.HasOne(e => e.Llamado)
+                    .WithMany(l => l.Ordenamientos)
+                    .HasForeignKey(e => e.LlamadoId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Departamento)
+                    .WithMany(d => d.Ordenamientos)
+                    .HasForeignKey(e => e.DepartamentoId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasIndex(e => new { e.LlamadoId, e.Tipo, e.Estado });
+            });
+
+            modelBuilder.Entity<PosicionOrdenamiento>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.PuntajeTotal).HasPrecision(10, 2);
+                entity.Property(e => e.TipoCuota).HasMaxLength(50);
+
+                entity.HasOne(e => e.Ordenamiento)
+                    .WithMany(o => o.Posiciones)
+                    .HasForeignKey(e => e.OrdenamientoId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Inscripcion)
+                    .WithMany(i => i.PosicionesOrdenamiento)
+                    .HasForeignKey(e => e.InscripcionId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(e => new { e.OrdenamientoId, e.InscripcionId }).IsUnique();
             });
         }
     }
