@@ -24,5 +24,7 @@ namespace PortalDGC.Domain.Entities
         public virtual ICollection<RequisitoExcluyente> RequisitosExcluyentes { get; set; } = new List<RequisitoExcluyente>();
         public virtual ICollection<ItemPuntuable> ItemsPuntuables { get; set; } = new List<ItemPuntuable>();
         public virtual ICollection<ApoyoNecesario> ApoyosNecesarios { get; set; } = new List<ApoyoNecesario>();
+        public virtual ICollection<Prueba> Pruebas { get; set; } = new List<Prueba>();
+        public virtual ICollection<Ordenamiento> Ordenamientos { get; set; } = new List<Ordenamiento>();
     }
 }
