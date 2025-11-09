@@ -16,5 +16,6 @@ namespace PortalDGC.Domain.Entities
         public bool Verificado { get; set; }
         public virtual Inscripcion Inscripcion { get; set; } = null!;
         public virtual ItemPuntuable ItemPuntuable { get; set; } = null!;
+        public virtual ICollection<EvaluacionMerito> EvaluacionesMerito { get; set; } = new List<EvaluacionMerito>();
     }
 }

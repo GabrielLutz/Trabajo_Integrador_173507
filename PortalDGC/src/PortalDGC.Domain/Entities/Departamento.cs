@@ -14,5 +14,7 @@ namespace PortalDGC.Domain.Entities
         public bool Activo { get; set; }
         public virtual ICollection<LlamadoDepartamento> LlamadoDepartamentos { get; set; } = new List<LlamadoDepartamento>();
         public virtual ICollection<Inscripcion> Inscripciones { get; set; } = new List<Inscripcion>();
+        public virtual ICollection<Ordenamiento> Ordenamientos { get; set; } = new List<Ordenamiento>();
+
     }
 }

@@ -23,5 +23,7 @@ namespace PortalDGC.Domain.Entities
         public virtual ICollection<RequisitoPostulante> RequisitosPostulante { get; set; } = new List<RequisitoPostulante>();
         public virtual ICollection<MeritoPostulante> MeritosPostulante { get; set; } = new List<MeritoPostulante>();
         public virtual ICollection<ApoyoSolicitado> ApoyosSolicitados { get; set; } = new List<ApoyoSolicitado>();
+        public virtual ICollection<EvaluacionPrueba> EvaluacionesPruebas { get; set; } = new List<EvaluacionPrueba>();
+        public virtual ICollection<PosicionOrdenamiento> PosicionesOrdenamiento { get; set; } = new List<PosicionOrdenamiento>();
     }
 }
