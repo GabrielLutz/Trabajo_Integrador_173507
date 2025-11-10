@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { ApiResponse } from '../models/api-response.model';
-import { Departamento } from '../models/departamento';
-import { DepartamentoLlamado } from '../models/llamado';
+import { Departamento } from '../models/departamento.model';
+import { DepartamentoLlamado } from '../models/llamado.model';
 
 @Injectable({
   providedIn: 'root'

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { ApiResponse } from '../models/api-response.model';
-import { Postulante, PostulanteDatosPersonales } from '../models/postulante';
+import { Postulante, PostulanteDatosPersonales } from '../models/postulante.model';
 
 @Injectable({
   providedIn: 'root'

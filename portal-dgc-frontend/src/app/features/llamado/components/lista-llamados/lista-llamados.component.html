@@ -1,1 +1,45 @@
-<p>lista-llamados works!</p>
+<div class="container">
+	<h1>Llamados Activos</h1>
+
+	<app-loading *ngIf="loading"></app-loading>
+	<app-error-message *ngIf="error" [message]="error"></app-error-message>
+
+	<div class="llamados-grid" *ngIf="!loading && !error">
+		<div class="llamado-card" *ngFor="let llamado of llamados">
+			<div class="card-header">
+				<h3>{{ llamado.titulo }}</h3>
+				<span class="badge" [class.urgente]="getDiasRestantes(llamado.fechaCierre) <= 7">
+					{{ getDiasRestantes(llamado.fechaCierre) }} días restantes
+				</span>
+			</div>
+
+			<div class="card-body">
+				<p>{{ llamado.descripcion }}</p>
+
+				<div class="fechas">
+					<div class="fecha">
+						<span class="label">Apertura:</span>
+						<span>{{ llamado.fechaApertura | date: 'dd/MM/yyyy' }}</span>
+					</div>
+					<div class="fecha">
+						<span class="label">Cierre:</span>
+						<span>{{ llamado.fechaCierre | date: 'dd/MM/yyyy' }}</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-actions">
+				<button class="btn btn-secondary" (click)="verDetalle(llamado.id)">
+					Ver Detalle
+				</button>
+				<button class="btn btn-primary" (click)="inscribirse(llamado.id)">
+					Inscribirse
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="no-llamados" *ngIf="!loading && !error && llamados.length === 0">
+		<p>No hay llamados activos en este momento.</p>
+	</div>
+</div>
