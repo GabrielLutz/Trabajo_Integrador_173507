@@ -10,16 +10,20 @@ namespace PortalDGC.DataAccess.Data
         public static void Initialize(ApplicationDbContext context)
         {
             // ======= RESET DURO =======
-            const bool HARD_RESET = true;
-            if (HARD_RESET)
-            {
-                context.Database.EnsureDeleted();
-                context.Database.Migrate();
-            }
-            else
+            const bool HARD_RESET = false;
+            
+            // Correr migraciones solo si hay pendientes:
+            if (context.Database.GetPendingMigrations().Any())
             {
                 context.Database.Migrate();
             }
+
+            // Borrar la Base de datos y recrearla
+            // if (HARD_RESET)
+            // {
+            //     context.Database.EnsureDeleted();
+            //     context.Database.Migrate();
+            // }
 
             // =====================
             // Departamentos
