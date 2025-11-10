@@ -1,10 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-detalle-inscripcion',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './detalle-inscripcion.component.html',
-  styleUrl: './detalle-inscripcion.component.scss'
+  styleUrls: ['./detalle-inscripcion.component.scss']
 })
 export class DetalleInscripcionComponent {
 
