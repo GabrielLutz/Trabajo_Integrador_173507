@@ -1,14 +1,6 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ErrorMessageComponent } from '../../../../shared/components/error-message/error-message.component';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
 import { PostulanteDatosPersonales } from '../../../../core/models/postulante.model';
@@ -29,8 +21,7 @@ type DatosPersonalesForm = {
 
 @Component({
   selector: 'app-datos-personales',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingComponent, ErrorMessageComponent],
+  standalone: false,
   templateUrl: './datos-personales.component.html',
   styleUrls: ['./datos-personales.component.scss']
 })

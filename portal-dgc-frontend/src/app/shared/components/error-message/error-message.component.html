@@ -1,4 +1,9 @@
 <div class="error-message">
-	<span class="icon">⚠</span>
-	<span>{{ message }}</span>
+	<div class="error-icon">⚠️</div>
+	<div class="error-content">
+		<h4>{{ message || 'Ha ocurrido un error' }}</h4>
+		<ul *ngIf="errors && errors.length > 0">
+			<li *ngFor="let error of errors">{{ error }}</li>
+		</ul>
+	</div>
 </div>

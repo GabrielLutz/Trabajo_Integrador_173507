@@ -1,5 +1,5 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { MisInscripcionesComponent } from './mis-inscripciones.component';
 
 describe('MisInscripcionesComponent', () => {
@@ -8,7 +8,8 @@ describe('MisInscripcionesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MisInscripcionesComponent]
+      declarations: [MisInscripcionesComponent],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
 

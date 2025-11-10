@@ -1,16 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ErrorMessageComponent } from '../../../../shared/components/error-message/error-message.component';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { ApiResponse } from '../../../../core/models/api-response.model';
 import { LlamadoDetalle } from '../../../../core/models/llamado.model';
 import { LlamadoService } from '../../../../core/services/llamado.service';
 
 @Component({
   selector: 'app-detalle-llamado',
-  standalone: true,
-  imports: [CommonModule, LoadingComponent, ErrorMessageComponent],
+  standalone: false,
   templateUrl: './detalle-llamado.component.html',
   styleUrls: ['./detalle-llamado.component.scss']
 })

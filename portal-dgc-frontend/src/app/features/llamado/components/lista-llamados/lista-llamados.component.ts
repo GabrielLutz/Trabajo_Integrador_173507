@@ -1,16 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ErrorMessageComponent } from '../../../../shared/components/error-message/error-message.component';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { ApiResponse } from '../../../../core/models/api-response.model';
 import { Llamado } from '../../../../core/models/llamado.model';
 import { LlamadoService } from '../../../../core/services/llamado.service';
 
 @Component({
   selector: 'app-lista-llamados',
-  standalone: true,
-  imports: [CommonModule, LoadingComponent, ErrorMessageComponent],
+  standalone: false,
   templateUrl: './lista-llamados.component.html',
   styleUrls: ['./lista-llamados.component.scss']
 })

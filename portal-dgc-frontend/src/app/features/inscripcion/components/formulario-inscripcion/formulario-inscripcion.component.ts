@@ -1,12 +1,5 @@
-import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  FormArray,
-  FormControl,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Subscription, fromEvent } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
@@ -16,19 +9,10 @@ import { ItemPuntuable, LlamadoDetalle, RequisitoExcluyente } from '../../../../
 import { InscripcionService } from '../../../../core/services/inscripcion.service';
 import { LlamadoService } from '../../../../core/services/llamado.service';
 import { PostulanteService } from '../../../../core/services/postulante.service';
-import { ErrorMessageComponent } from '../../../../shared/components/error-message/error-message.component';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-formulario-inscripcion',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    LoadingComponent,
-    ErrorMessageComponent
-  ],
+  standalone: false,
   templateUrl: './formulario-inscripcion.component.html',
   styleUrls: ['./formulario-inscripcion.component.scss']
 })

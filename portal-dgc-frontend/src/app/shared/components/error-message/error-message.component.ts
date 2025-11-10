@@ -1,13 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-error-message',
-  standalone: true,
-  imports: [CommonModule],
+  standalone: false,
   templateUrl: './error-message.component.html',
   styleUrls: ['./error-message.component.scss']
 })
 export class ErrorMessageComponent {
-  @Input() message = 'Ocurrió un error inesperado.';
+  @Input() message: string = '';
+  @Input() errors: string[] = [];
 }
