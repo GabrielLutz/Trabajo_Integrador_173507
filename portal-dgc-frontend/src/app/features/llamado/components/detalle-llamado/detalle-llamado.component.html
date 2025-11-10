@@ -1,1 +1,128 @@
-<p>detalle-llamado works!</p>
+<div class="container">
+	<app-loading *ngIf="loading"></app-loading>
+	<app-error-message *ngIf="error" [message]="error"></app-error-message>
+
+	<div *ngIf="!loading && !error && llamado" class="detalle-llamado">
+		<div class="header">
+			<button class="btn-back" (click)="volver()">
+				← Volver
+			</button>
+			<h1>{{ llamado.titulo }}</h1>
+			<div class="info-header">
+				<span class="badge badge-success">{{ llamado.estado }}</span>
+				<span class="puestos">{{ llamado.cantidadPuestos }} puestos disponibles</span>
+			</div>
+		</div>
+
+		<div class="tabs">
+			<button
+				class="tab"
+				[class.active]="tabActiva === 'informacion'"
+				(click)="cambiarTab('informacion')">
+				Información General
+			</button>
+			<button
+				class="tab"
+				[class.active]="tabActiva === 'requisitos'"
+				(click)="cambiarTab('requisitos')">
+				Requisitos
+			</button>
+			<button
+				class="tab"
+				[class.active]="tabActiva === 'puntuables'"
+				(click)="cambiarTab('puntuables')">
+				Items Puntuables
+			</button>
+			<button
+				class="tab"
+				[class.active]="tabActiva === 'apoyos'"
+				(click)="cambiarTab('apoyos')">
+				Apoyos
+			</button>
+		</div>
+
+		<div class="content">
+			<div *ngIf="tabActiva === 'informacion'" class="tab-content">
+				<section>
+					<h2>Descripción</h2>
+					<p>{{ llamado.descripcion }}</p>
+				</section>
+
+				<section>
+					<h2>Bases del Llamado</h2>
+					<div class="bases" [innerHTML]="llamado.bases"></div>
+				</section>
+
+				<section>
+					<h2>Fechas Importantes</h2>
+					<div class="fechas-grid">
+						<div class="fecha-item">
+							<span class="label">Apertura:</span>
+							<span class="value">{{ llamado.fechaApertura | date: 'dd/MM/yyyy' }}</span>
+						</div>
+						<div class="fecha-item">
+							<span class="label">Cierre:</span>
+							<span class="value">{{ llamado.fechaCierre | date: 'dd/MM/yyyy HH:mm' }}</span>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h2>Departamentos</h2>
+					<div class="departamentos-grid">
+						<div class="departamento-card" *ngFor="let dept of llamado.departamentos">
+							<h3>{{ dept.nombre }}</h3>
+							<p>{{ dept.cantidadPuestos }} puesto(s) disponible(s)</p>
+						</div>
+					</div>
+				</section>
+			</div>
+
+			<div *ngIf="tabActiva === 'requisitos'" class="tab-content">
+				<h2>Requisitos Excluyentes</h2>
+				<div class="requisitos-list">
+					<div class="requisito-item" *ngFor="let req of llamado.requisitosExcluyentes">
+						<div class="requisito-header">
+							<span class="tipo">{{ req.tipo }}</span>
+							<span class="obligatorio" *ngIf="req.obligatorio">OBLIGATORIO</span>
+						</div>
+						<p>{{ req.descripcion }}</p>
+					</div>
+				</div>
+			</div>
+
+			<div *ngIf="tabActiva === 'puntuables'" class="tab-content">
+				<h2>Items Puntuables</h2>
+				<div class="items-list">
+					<div class="item-card" *ngFor="let item of llamado.itemsPuntuables">
+						<div class="item-header">
+							<h3>{{ item.nombre }}</h3>
+							<span class="puntaje">{{ item.puntajeMaximo }} pts</span>
+						</div>
+						<p class="categoria">{{ item.categoria }}</p>
+						<p class="descripcion">{{ item.descripcion }}</p>
+					</div>
+				</div>
+			</div>
+
+			<div *ngIf="tabActiva === 'apoyos'" class="tab-content">
+				<h2>Apoyos Necesarios</h2>
+				<p class="info-text">
+					Si requiere alguno de los siguientes apoyos, puede solicitarlos durante el proceso de inscripción.
+				</p>
+				<div class="apoyos-list">
+					<div class="apoyo-item" *ngFor="let apoyo of llamado.apoyosNecesarios">
+						<span class="tipo">{{ apoyo.tipo }}</span>
+						<p>{{ apoyo.descripcion }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="actions">
+			<button class="btn btn-primary btn-large" (click)="inscribirse()">
+				Inscribirse a este Llamado
+			</button>
+		</div>
+	</div>
+</div>

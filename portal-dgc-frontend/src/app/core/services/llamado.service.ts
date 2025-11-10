@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { ApiResponse } from '../models/api-response.model';
-import { Llamado, LlamadoDetalle } from '../models/llamado';
+import { Llamado, LlamadoDetalle } from '../models/llamado.model';
 
 @Injectable({
   providedIn: 'root'

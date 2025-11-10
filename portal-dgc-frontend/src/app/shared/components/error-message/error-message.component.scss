@@ -1,0 +1,14 @@
+.error-message {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 1rem;
+	border-radius: 4px;
+	background-color: #ffebee;
+	color: #c62828;
+	font-weight: 500;
+}
+
+.icon {
+	font-size: 1.2rem;
+}
