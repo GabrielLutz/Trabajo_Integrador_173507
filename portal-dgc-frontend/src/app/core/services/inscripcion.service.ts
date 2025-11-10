@@ -6,7 +6,7 @@ import {
   CrearInscripcion,
   InscripcionResponse,
   InscripcionSimple
-} from '../models/inscripcion.model';
+} from '../models/inscripcion';
 
 @Injectable({
   providedIn: 'root'
