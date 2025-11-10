@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-mis-inscripciones',
-  imports: [],
+  standalone: false,
   templateUrl: './mis-inscripciones.component.html',
-  styleUrl: './mis-inscripciones.component.scss'
+  styleUrls: ['./mis-inscripciones.component.scss']
 })
 export class MisInscripcionesComponent {
 

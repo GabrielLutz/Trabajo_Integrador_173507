@@ -1,1 +1,24 @@
-<p>header works!</p>
+<header class="header">
+	<div class="container">
+		<div class="logo" (click)="navegarA('/')">
+			<h1>Portal DGC</h1>
+			<p>Dirección General de Concursos</p>
+		</div>
+
+		<button class="menu-toggle" (click)="toggleMenu()">
+			☰
+		</button>
+
+		<nav class="nav" [class.open]="menuAbierto">
+			<a routerLink="/llamados" routerLinkActive="active" (click)="menuAbierto = false">
+				Llamados
+			</a>
+			<a routerLink="/perfil/mis-inscripciones" routerLinkActive="active" (click)="menuAbierto = false">
+				Mis Inscripciones
+			</a>
+			<a routerLink="/perfil/datos-personales" routerLinkActive="active" (click)="menuAbierto = false">
+				Mi Perfil
+			</a>
+		</nav>
+	</div>
+</header>
