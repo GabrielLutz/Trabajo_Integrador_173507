@@ -140,7 +140,7 @@ export class FormularioInscripcionComponent implements OnInit, OnDestroy, AfterV
       next: (response) => {
         if (response.success && response.data && !response.data.datosCompletados) {
           window.alert('Debe completar sus datos personales antes de inscribirse.');
-          this.router.navigate(['/postulante', 'datos-personales']);
+          this.router.navigate(['/perfil', 'editar']);
         }
       }
     });

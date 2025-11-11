@@ -217,6 +217,10 @@ export class DatosPersonalesComponent implements OnInit, OnDestroy {
     });
   }
 
+  cancelar(): void {
+    this.router.navigate(['/perfil']);
+  }
+
   marcarCamposComoTocados(): void {
     Object.values(this.form.controls).forEach((control) => control.markAsTouched());
   }

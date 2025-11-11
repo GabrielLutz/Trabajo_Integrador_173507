@@ -2,24 +2,28 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DatosPersonalesComponent } from './components/datos-personales/datos-personales.component';
 import { MisInscripcionesComponent } from './components/mis-inscripciones/mis-inscripciones.component';
+import { PerfilComponent } from './components/perfil/perfil.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'mis-inscripciones',
-    pathMatch: 'full'
+    component: PerfilComponent
   },
   {
     path: 'mis-inscripciones',
     component: MisInscripcionesComponent
   },
   {
-    path: 'datos-personales',
+    path: 'editar',
     component: DatosPersonalesComponent
   },
   {
+    path: 'datos-personales',
+    redirectTo: 'editar'
+  },
+  {
     path: '**',
-    redirectTo: 'mis-inscripciones'
+    redirectTo: ''
   }
 ];
 
