@@ -10,15 +10,20 @@
 		</button>
 
 		<nav class="nav" [class.open]="menuAbierto">
-			<a routerLink="/llamados" routerLinkActive="active" (click)="menuAbierto = false">
+			<a *ngIf="isAuthenticated" routerLink="/llamados" routerLinkActive="active" (click)="menuAbierto = false">
 				Llamados
 			</a>
-			<a routerLink="/perfil/mis-inscripciones" routerLinkActive="active" (click)="menuAbierto = false">
+			<a *ngIf="isAuthenticated" routerLink="/perfil/mis-inscripciones" routerLinkActive="active" (click)="menuAbierto = false">
 				Mis Inscripciones
 			</a>
-			<a routerLink="/perfil/datos-personales" routerLinkActive="active" (click)="menuAbierto = false">
+			<a *ngIf="isAuthenticated"
+				routerLink="/perfil"
+				routerLinkActive="active"
+				[routerLinkActiveOptions]="{ exact: true }"
+				(click)="menuAbierto = false">
 				Mi Perfil
 			</a>
+			<button *ngIf="isAuthenticated" class="logout-btn" (click)="logout()">Cerrar sesión</button>
 		</nav>
 	</div>
 </header>

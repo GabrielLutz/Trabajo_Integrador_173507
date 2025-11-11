@@ -1,1 +1,79 @@
-<p>perfil works!</p>
+<div class="perfil-wrapper">
+	<div *ngIf="loading" class="perfil-state">
+		Cargando perfil...
+	</div>
+
+	<div *ngIf="!loading && error" class="perfil-state perfil-state--error">
+		<span>{{ error }}</span>
+		<button class="btn btn-outline" (click)="cargarPerfil()">Reintentar</button>
+	</div>
+
+	<ng-container *ngIf="!loading && !error && postulante as datos">
+		<div class="perfil-container">
+			<section class="perfil-header-card">
+				<div class="perfil-header-main">
+					<div class="perfil-avatar">{{ iniciales }}</div>
+					<div>
+						<h1>Mi perfil</h1>
+						<p>{{ nombreCompleto }}</p>
+					</div>
+				</div>
+
+				<span class="perfil-badge" [class.perfil-badge--warning]="!datos.datosCompletados">
+					{{ datos.datosCompletados ? 'Datos completos' : 'Datos pendientes' }}
+				</span>
+			</section>
+
+			<section class="perfil-card">
+				<div class="perfil-card-header">
+					<h2>Información personal</h2>
+					<button class="btn btn-outline" (click)="editarDatos()">Editar datos</button>
+				</div>
+
+				<div class="perfil-info-grid perfil-info-grid--three">
+					<div class="perfil-field">
+						<span class="perfil-field__label">Nombre completo</span>
+						<p class="perfil-field__value">{{ nombreCompleto }}</p>
+					</div>
+					<div class="perfil-field">
+						<span class="perfil-field__label">Fecha de nacimiento</span>
+						<p class="perfil-field__value">{{ formatearFecha(datos.fechaNacimiento) }}</p>
+					</div>
+					<div class="perfil-field">
+						<span class="perfil-field__label">Cédula de identidad</span>
+						<p class="perfil-field__value">{{ mostrarValor(datos.cedulaIdentidad) }}</p>
+					</div>
+					<div class="perfil-field">
+						<span class="perfil-field__label">Género</span>
+						<p class="perfil-field__value">{{ mostrarValor(generoDescripcion) }}</p>
+					</div>
+				</div>
+			</section>
+
+			<section class="perfil-card">
+				<div class="perfil-card-header">
+					<h2>Contacto</h2>
+				</div>
+
+				<div class="perfil-info-grid perfil-info-grid--two">
+					<div class="perfil-field">
+						<span class="perfil-field__label">Email</span>
+						<p class="perfil-field__value">{{ mostrarValor(datos.email) }}</p>
+					</div>
+					<div class="perfil-field">
+						<span class="perfil-field__label">Celular</span>
+						<p class="perfil-field__value">{{ mostrarValor(datos.celular) }}</p>
+					</div>
+					<div class="perfil-field">
+						<span class="perfil-field__label">Teléfono</span>
+						<p class="perfil-field__value">{{ mostrarValor(datos.telefono) }}</p>
+					</div>
+					<div class="perfil-field perfil-field--full">
+						<span class="perfil-field__label">Domicilio</span>
+						<p class="perfil-field__value">{{ mostrarValor(datos.domicilio) }}</p>
+					</div>
+				</div>
+			</section>
+		</div>
+	</ng-container>
+</div>

@@ -51,6 +51,25 @@
 		display: flex;
 		gap: 2rem;
 
+		.logout-btn {
+			background: transparent;
+			color: inherit;
+			border: none;
+			padding: 0.5rem 1rem;
+			border-radius: 4px;
+			cursor: pointer;
+			transition: background-color 0.2s;
+
+			&:hover {
+				background-color: rgba(255, 255, 255, 0.1);
+			}
+
+			&:focus {
+				outline: 2px solid rgba(255, 255, 255, 0.4);
+				outline-offset: 2px;
+			}
+		}
+
 		@media (max-width: 768px) {
 			position: fixed;
 			top: 80px;
@@ -85,6 +104,15 @@
 			}
 
 			@media (max-width: 768px) {
+				padding: 1rem 0;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			}
+		}
+
+		.logout-btn {
+			@media (max-width: 768px) {
+				width: 100%;
+				text-align: left;
 				padding: 1rem 0;
 				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 			}

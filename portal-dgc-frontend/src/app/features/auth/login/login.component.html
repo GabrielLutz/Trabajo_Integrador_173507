@@ -1,0 +1,40 @@
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h1 class="auth-title">Portal de la Dirección General de Casinos</h1>
+    <p class="auth-subtitle">Ingresar</p>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="form-field" [class.invalid]="f['usuario'].touched && f['usuario'].invalid">
+        <label for="usuario">Usuario</label>
+        <input
+          id="usuario"
+          formControlName="usuario"
+          placeholder="Ingresá tu usuario"
+          [class.invalid]="f['usuario'].touched && f['usuario'].invalid"
+        />
+        <span class="error" *ngIf="f['usuario'].touched && f['usuario'].invalid">El usuario es obligatorio.</span>
+      </div>
+
+      <div class="form-field" [class.invalid]="f['password'].touched && f['password'].invalid">
+        <label for="password">Contraseña</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Ingresá tu contraseña"
+          [class.invalid]="f['password'].touched && f['password'].invalid"
+        />
+        <span class="error" *ngIf="f['password'].touched && f['password'].invalid">La contraseña es obligatoria.</span>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
+      <button type="button" class="btn btn-outline btn-block" (click)="goToRegistro()">
+        ¿No tenés usuario? Registrate ahora
+      </button>
+    </form>
+
+    <p class="link"><a routerLink="/panel-tribunal">Ir al panel del tribunal</a></p>
+  </div>
+</div>
