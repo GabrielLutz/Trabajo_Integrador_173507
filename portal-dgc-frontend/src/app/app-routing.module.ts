@@ -35,6 +35,12 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'tribunal',
+    loadChildren: () => import('./features/tribunal/tribunal.module').then((m) => m.TribunalModule),
+    canLoad: [AuthGuard],
+    canActivate: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/login'
   }
