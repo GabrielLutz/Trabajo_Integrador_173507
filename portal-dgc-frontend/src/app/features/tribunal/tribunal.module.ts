@@ -13,10 +13,17 @@ import { VerOrdenamientoComponent } from './ver-ordenamiento/ver-ordenamiento.co
 @NgModule({
   declarations: [
     DashboardTribunalComponent,
-    DetalleEvaluacionComponent,
     GenerarOrdenamientoComponent,
     VerOrdenamientoComponent
   ],
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ListaInscripcionesComponent, TribunalRoutingModule, SharedModule]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ListaInscripcionesComponent,
+    DetalleEvaluacionComponent,
+    TribunalRoutingModule,
+    SharedModule
+  ]
 })
 export class TribunalModule {}

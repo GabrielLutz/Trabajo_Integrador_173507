@@ -17,7 +17,7 @@
   <div *ngIf="estadisticas && !loading" class="dashboard-content">
     <div class="stats-cards">
       <div class="stat-card">
-        <div class="stat-icon inscripciones">&#x1F4DD;</div>
+        <div class="stat-icon inscripciones">📝</div>
         <div class="stat-info">
           <h3>{{ estadisticas.totalInscripciones }}</h3>
           <p>Total Inscripciones</p>
@@ -25,7 +25,7 @@
       </div>
 
       <div class="stat-card">
-        <div class="stat-icon evaluadas">&#x2705;</div>
+        <div class="stat-icon evaluadas">✅</div>
         <div class="stat-info">
           <h3>{{ estadisticas.inscripcionesConPruebasCompletas }}</h3>
           <p>Pruebas Completas</p>
@@ -36,7 +36,7 @@
       </div>
 
       <div class="stat-card">
-        <div class="stat-icon aprobados">&#x1F3C6;</div>
+        <div class="stat-icon aprobados">🏆</div>
         <div class="stat-info">
           <h3>{{ estadisticas.aprobadosFinal }}</h3>
           <p>Aprobados (&#8805;70 pts)</p>
@@ -47,7 +47,7 @@
       </div>
 
       <div class="stat-card">
-        <div class="stat-icon promedio">&#x1F4CA;</div>
+        <div class="stat-icon promedio">📊</div>
         <div class="stat-info">
           <h3>{{ estadisticas.promedioGeneral | number: '1.1-1' }}</h3>
           <p>Promedio General</p>
@@ -90,24 +90,31 @@
       <h2>Universos por Ley de Cuotas</h2>
       <div class="universos-grid">
         <div class="universo-card afro">
-          <div class="universo-icon">&#x1F30D;</div>
+          <div class="universo-icon">👥</div>
           <h3>{{ estadisticas.totalAfrodescendientes }}</h3>
           <p>Afrodescendientes</p>
           <span class="cuota-badge">8% cuota</span>
         </div>
 
         <div class="universo-card trans">
-          <div class="universo-icon">&#x1F3F3;&#xFE0F;&#x200D;&#x26A7;&#xFE0F;</div>
+          <div class="universo-icon">🏳️‍⚧️</div>
           <h3>{{ estadisticas.totalTrans }}</h3>
           <p>Trans</p>
           <span class="cuota-badge">1% cuota</span>
         </div>
 
         <div class="universo-card discapacidad">
-          <div class="universo-icon">&#x267F;</div>
+          <div class="universo-icon">♿</div>
           <h3>{{ estadisticas.totalDiscapacidad }}</h3>
           <p>Discapacidad</p>
           <span class="cuota-badge">4% cuota</span>
+        </div>
+
+        <div class="universo-card general">
+          <div class="universo-icon">🌍</div>
+          <h3>{{ obtenerTotalGeneral() }}</h3>
+          <p>General</p>
+          <span class="cuota-badge sin-cuota">Sin cuota</span>
         </div>
       </div>
     </div>
