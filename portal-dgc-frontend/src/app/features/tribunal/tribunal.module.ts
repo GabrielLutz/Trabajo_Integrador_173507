@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { TribunalRoutingModule } from './tribunal-routing.module';
 import { SharedModule } from '../../shared/shared.module';
@@ -13,11 +13,10 @@ import { VerOrdenamientoComponent } from './ver-ordenamiento/ver-ordenamiento.co
 @NgModule({
   declarations: [
     DashboardTribunalComponent,
-    ListaInscripcionesComponent,
     DetalleEvaluacionComponent,
     GenerarOrdenamientoComponent,
     VerOrdenamientoComponent
   ],
-  imports: [CommonModule, ReactiveFormsModule, TribunalRoutingModule, SharedModule]
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ListaInscripcionesComponent, TribunalRoutingModule, SharedModule]
 })
 export class TribunalModule {}
