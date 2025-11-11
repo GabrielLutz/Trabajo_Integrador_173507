@@ -1,1 +1,145 @@
-<p>detalle-inscripcion works!</p>
+<section class="detalle-inscripcion container">
+	<button class="back-link" type="button" (click)="irAListado()">
+		← Volver a mis inscripciones
+	</button>
+
+	<app-loading *ngIf="loading"></app-loading>
+
+	<app-error-message
+		*ngIf="!loading && error"
+		[message]="error"
+	></app-error-message>
+
+	<ng-container *ngIf="!loading && !error && inscripcion as data">
+		<header class="page-header">
+			<div>
+				<h1>{{ data.tituloLlamado }}</h1>
+				<p class="subtitle">Departamento {{ data.nombreDepartamento }}</p>
+			</div>
+			<span class="badge" [ngClass]="getEstadoBadgeClass(data.estado)">
+				{{ data.estado }}
+			</span>
+		</header>
+
+		<div class="summary-grid">
+			<div class="card summary-card">
+				<span class="label">Fecha de inscripción</span>
+				<p>{{ data.fechaInscripcion | formatDate: 'dd/MM/yyyy HH:mm' }}</p>
+			</div>
+			<div class="card summary-card">
+				<span class="label">Puntaje total</span>
+				<p class="highlight">{{ data.puntajeTotal | number: '1.2-2' }}</p>
+			</div>
+			<div class="card summary-card">
+				<span class="label">Postulante</span>
+				<p>{{ data.nombrePostulante }}</p>
+			</div>
+			<div class="card summary-card">
+				<span class="label">Identificador</span>
+				<p>#{{ data.id }}</p>
+			</div>
+		</div>
+
+		<section class="detail-section" *ngIf="tieneAutodefinicion()">
+			<h2>Autodefinición</h2>
+			<div class="chips">
+				<span class="chip" [class.active]="data.autodefinicion?.esAfrodescendiente">
+					Afrodescendiente
+				</span>
+				<span class="chip" [class.active]="data.autodefinicion?.esTrans">
+					Persona trans
+				</span>
+				<span class="chip" [class.active]="data.autodefinicion?.tieneDiscapacidad">
+					Persona con discapacidad
+				</span>
+			</div>
+		</section>
+
+		<section class="detail-section" *ngIf="data.requisitos?.length; else requisitosVacios">
+			<h2>Requisitos presentados</h2>
+			<div class="table-wrapper">
+				<table>
+					<thead>
+						<tr>
+							<th>Requisito</th>
+							<th>Tipo</th>
+							<th>Estado</th>
+							<th>Observaciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let requisito of data.requisitos">
+							<td>{{ requisito.descripcionRequisito }}</td>
+							<td>{{ requisito.tipoRequisito }}</td>
+							<td>
+								<span class="badge" [ngClass]="requisito.cumple ? 'badge-success' : 'badge-warning'">
+									{{ requisito.cumple ? 'Cumplido' : 'Pendiente' }}
+								</span>
+							</td>
+							<td>{{ requisito.observaciones || '—' }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<section class="detail-section" *ngIf="data.meritos?.length; else meritosVacios">
+			<h2>Méritos cargados</h2>
+			<div class="meritos-grid">
+				<article class="card merito-card" *ngFor="let merito of data.meritos">
+					<header>
+						<h3>{{ merito.nombreItem }}</h3>
+						<span class="badge" [ngClass]="merito.verificado ? 'badge-success' : 'badge-info'">
+							{{ merito.verificado ? 'Verificado' : 'En revisión' }}
+						</span>
+					</header>
+
+					<p class="descripcion">{{ merito.descripcionItem }}</p>
+
+					<dl>
+						<div>
+							<dt>Puntaje obtenido</dt>
+							<dd>{{ merito.puntajeObtenido | number: '1.2-2' }} / {{ merito.puntajeMaximo | number: '1.2-2' }}</dd>
+						</div>
+						<div>
+							<dt>Documento respaldo</dt>
+							<dd>{{ merito.documentoRespaldo || 'No adjuntó' }}</dd>
+						</div>
+					</dl>
+				</article>
+			</div>
+		</section>
+
+		<section class="detail-section" *ngIf="data.apoyos?.length; else apoyosVacios">
+			<h2>Apoyos solicitados</h2>
+			<ul class="apoyos-list">
+				<li *ngFor="let apoyo of data.apoyos">
+					<h3>{{ apoyo.descripcionApoyo }}</h3>
+					<p class="tipo">{{ apoyo.tipoApoyo }}</p>
+					<p>{{ apoyo.justificacion || 'Sin justificación adicional' }}</p>
+				</li>
+			</ul>
+		</section>
+	</ng-container>
+
+	<ng-template #requisitosVacios>
+		<div class="detail-section card empty-section">
+			<h2>Requisitos presentados</h2>
+			<p>No registramos requisitos asociados a esta inscripción.</p>
+		</div>
+	</ng-template>
+
+	<ng-template #meritosVacios>
+		<div class="detail-section card empty-section">
+			<h2>Méritos cargados</h2>
+			<p>No se cargaron méritos para esta inscripción.</p>
+		</div>
+	</ng-template>
+
+	<ng-template #apoyosVacios>
+		<div class="detail-section card empty-section">
+			<h2>Apoyos solicitados</h2>
+			<p>No se solicitaron apoyos adicionales.</p>
+		</div>
+	</ng-template>
+</section>
