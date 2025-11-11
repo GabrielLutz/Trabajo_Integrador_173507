@@ -1,17 +1,354 @@
-.tribunal-card {
-  background: #ffffff;
+.dashboard-tribunal {
   padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 18px 36px rgba(15, 64, 128, 0.1);
-  border: 1px solid rgba(33, 150, 243, 0.2);
+  max-width: 1400px;
+  margin: 0 auto;
 
-  h1 {
-    margin: 0 0 0.75rem;
-    color: #0b3c91;
+  .header-section {
+    margin-bottom: 2rem;
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: #7f8c8d;
+      font-size: 1.1rem;
+    }
   }
 
-  p {
-    margin: 0;
-    color: #546e7a;
+  .loading-container {
+    text-align: center;
+    padding: 3rem;
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .error-message {
+    background-color: #ffeeee;
+    color: #cc0000;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-icon {
+      font-size: 2.5rem;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+
+      &.inscripciones {
+        background: #e3f2fd;
+      }
+
+      &.evaluadas {
+        background: #e8f5e9;
+      }
+
+      &.aprobados {
+        background: #fff3e0;
+      }
+
+      &.promedio {
+        background: #f3e5f5;
+      }
+    }
+
+    .stat-info {
+      flex: 1;
+
+      h3 {
+        font-size: 2rem;
+        color: #2c3e50;
+        margin: 0;
+      }
+
+      p {
+        color: #7f8c8d;
+        margin: 0.25rem 0 0;
+      }
+
+      .percentage {
+        display: inline-block;
+        background: #3498db;
+        color: #ffffff;
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+      }
+    }
+  }
+
+  .pruebas-section,
+  .universos-section,
+  .ordenamiento-section {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+  }
+
+  .pruebas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .prueba-card {
+    border: 2px solid #ecf0f1;
+    border-radius: 8px;
+    padding: 1.5rem;
+
+    h3 {
+      color: #34495e;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .prueba-stats {
+      margin-bottom: 1rem;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+
+      .label {
+        color: #7f8c8d;
+      }
+
+      .value {
+        font-weight: 600;
+        color: #2c3e50;
+      }
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #ecf0f1;
+      border-radius: 4px;
+      overflow: hidden;
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #3498db, #2ecc71);
+        transition: width 0.3s;
+      }
+    }
+  }
+
+  .universos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .universo-card {
+    text-align: center;
+    padding: 2rem 1rem;
+    border-radius: 12px;
+    color: #ffffff;
+
+    &.afro {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    &.trans {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    &.discapacidad {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .universo-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    h3 {
+      font-size: 2.5rem;
+      margin: 0.5rem 0;
+    }
+
+    p {
+      margin: 0.5rem 0;
+      opacity: 0.9;
+    }
+
+    .cuota-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.3);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+  }
+
+  .ordenamiento-card {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    border: 2px dashed #bdc3c7;
+    border-radius: 12px;
+
+    &.generado {
+      border-color: #27ae60;
+      background: #eafaf1;
+    }
+
+    .ordenamiento-icon {
+      font-size: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+    }
+
+    .ordenamiento-info {
+      flex: 1;
+
+      h3 {
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        color: #7f8c8d;
+        margin: 0;
+      }
+    }
+  }
+
+  .actions-section {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .btn-primary,
+  .btn-success,
+  .btn-secondary {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .btn-primary {
+    background: #3498db;
+    color: #ffffff;
+
+    &:hover:not(:disabled) {
+      background: #2980b9;
+      transform: translateY(-2px);
+    }
+  }
+
+  .btn-success {
+    background: #27ae60;
+    color: #ffffff;
+
+    &:hover:not(:disabled) {
+      background: #229954;
+      transform: translateY(-2px);
+    }
+  }
+
+  .btn-secondary {
+    background: #95a5a6;
+    color: #ffffff;
+
+    &:hover {
+      background: #7f8c8d;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-tribunal {
+    padding: 1rem;
+
+    .stats-cards {
+      grid-template-columns: 1fr;
+    }
+
+    .pruebas-grid,
+    .universos-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .actions-section {
+      flex-direction: column;
+
+      button {
+        width: 100%;
+      }
+    }
   }
 }

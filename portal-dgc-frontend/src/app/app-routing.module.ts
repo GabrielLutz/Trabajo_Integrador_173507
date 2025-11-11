@@ -36,9 +36,7 @@ const routes: Routes = [
   },
   {
     path: 'tribunal',
-    loadChildren: () => import('./features/tribunal/tribunal.module').then((m) => m.TribunalModule),
-    canLoad: [AuthGuard],
-    canActivate: [AuthGuard]
+    loadChildren: () => import('./features/tribunal/tribunal.module').then((m) => m.TribunalModule)
   },
   {
     path: '**',
