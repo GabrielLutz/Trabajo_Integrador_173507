@@ -94,19 +94,23 @@
           <td>
             <div class="universos-badges">
               <span *ngIf="inscripcion.esAfrodescendiente" class="badge-universo afro" title="Afrodescendiente">
-                <span aria-hidden="true">*</span>
+                <span class="icono" aria-hidden="true">👥</span>
+                <span class="texto">Afrodescendiente</span>
               </span>
               <span *ngIf="inscripcion.esTrans" class="badge-universo trans" title="Trans">
-                <span aria-hidden="true">T</span>
+                <span class="icono" aria-hidden="true">🏳️‍⚧️</span>
+                <span class="texto">Trans</span>
               </span>
               <span *ngIf="inscripcion.tieneDiscapacidad" class="badge-universo disc" title="Discapacidad">
-                <span aria-hidden="true">D</span>
+                <span class="icono" aria-hidden="true">♿</span>
+                <span class="texto">Discapacidad</span>
               </span>
               <span
                 *ngIf="!inscripcion.esAfrodescendiente && !inscripcion.esTrans && !inscripcion.tieneDiscapacidad"
                 class="badge-universo general"
               >
-                General
+                <span class="icono" aria-hidden="true">🌍</span>
+                <span class="texto">General</span>
               </span>
             </div>
           </td>

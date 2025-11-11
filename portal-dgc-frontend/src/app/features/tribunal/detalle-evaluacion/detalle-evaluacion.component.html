@@ -1,4 +1,238 @@
-<section class="tribunal-card">
-  <h2>Detalle de evaluación</h2>
-  <p>Esta vista mostrará requisitos, pruebas y méritos para calificar la inscripción seleccionada.</p>
-</section>
+<div class="detalle-evaluacion">
+  <div class="header">
+    <button class="btn-back" (click)="volver()">Volver</button>
+    <h1>Evaluación de inscripción</h1>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Cargando detalle...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+    <button (click)="cargarDetalle()">Reintentar</button>
+  </div>
+
+  <div *ngIf="mensajeExito" class="success-message">
+    {{ mensajeExito }}
+  </div>
+
+  <div *ngIf="detalle && !loading" class="contenido">
+    <div class="postulante-card">
+      <div class="postulante-header">
+        <h2>{{ detalle.nombreCompleto }}</h2>
+        <div class="badges">
+          <span *ngIf="detalle.esAfrodescendiente" class="badge afro">Afrodescendiente</span>
+          <span *ngIf="detalle.esTrans" class="badge trans">Trans</span>
+          <span *ngIf="detalle.tieneDiscapacidad" class="badge disc">Discapacidad</span>
+        </div>
+      </div>
+
+      <div class="postulante-datos">
+        <div class="dato">
+          <span class="label">CI</span>
+          <span class="value">{{ detalle.cedulaIdentidad }}</span>
+        </div>
+        <div class="dato">
+          <span class="label">Email</span>
+          <span class="value">{{ detalle.email }}</span>
+        </div>
+        <div class="dato">
+          <span class="label">Departamento</span>
+          <span class="value">{{ detalle.departamento }}</span>
+        </div>
+      </div>
+
+      <div class="puntaje-resumen">
+        <div class="puntaje-item">
+          <span class="label">Pruebas</span>
+          <span class="valor">{{ detalle.puntajePruebas | number: '1.1-1' }} pts</span>
+        </div>
+        <div class="puntaje-item">
+          <span class="label">Méritos</span>
+          <span class="valor">{{ detalle.puntajeMeritos | number: '1.1-1' }} pts</span>
+        </div>
+        <div class="puntaje-item total">
+          <span class="label">Total</span>
+          <span class="valor">{{ detalle.puntajeTotal | number: '1.1-1' }} pts</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs-container">
+      <button
+        class="tab"
+        [class.active]="seccionActiva === 'requisitos'"
+        (click)="cambiarSeccion('requisitos')"
+      >
+        Requisitos ({{ detalle.requisitos.length }})
+      </button>
+      <button
+        class="tab"
+        [class.active]="seccionActiva === 'pruebas'"
+        (click)="cambiarSeccion('pruebas')"
+      >
+        Pruebas ({{ detalle.pruebas.length }})
+      </button>
+      <button
+        class="tab"
+        [class.active]="seccionActiva === 'meritos'"
+        (click)="cambiarSeccion('meritos')"
+      >
+        Méritos ({{ detalle.meritos.length }})
+      </button>
+    </div>
+
+    <div *ngIf="seccionActiva === 'requisitos'" class="seccion-content">
+      <h3>Requisitos declarados</h3>
+      <div class="requisitos-lista">
+        <div *ngFor="let req of detalle.requisitos" class="requisito-item">
+          <div class="requisito-info">
+            <span class="icono">{{ req.cumple ? '[OK]' : '[X]' }}</span>
+            <div class="texto">
+              <p class="descripcion">{{ req.descripcionRequisito }}</p>
+              <span *ngIf="req.obligatorio" class="badge-obligatorio">Obligatorio</span>
+              <p *ngIf="req.observaciones" class="observaciones">{{ req.observaciones }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="seccionActiva === 'pruebas'" class="seccion-content">
+      <h3>Calificar pruebas</h3>
+
+      <div class="pruebas-grid">
+        <div class="pruebas-disponibles">
+          <h4>Pruebas del llamado</h4>
+          <div *ngFor="let prueba of pruebas" class="prueba-item" (click)="seleccionarPrueba(prueba)">
+            <div class="prueba-nombre">{{ prueba.nombre }}</div>
+            <div class="prueba-info">
+              <span class="tipo">{{ prueba.tipo }}</span>
+              <span class="puntaje">Max: {{ prueba.puntajeMaximo }} pts</span>
+            </div>
+            <div *ngIf="estaPruebaEvaluada(prueba.id)" class="evaluado-badge">
+              Evaluada
+            </div>
+          </div>
+        </div>
+
+        <div class="formulario-calificar" *ngIf="pruebaSeleccionada">
+          <h4>Calificar: {{ pruebaSeleccionada.nombre }}</h4>
+
+          <form [formGroup]="formCalificarPrueba" (ngSubmit)="calificarPrueba()">
+            <div class="form-group">
+              <label>Puntaje obtenido (máx: {{ pruebaSeleccionada.puntajeMaximo }})</label>
+              <input
+                type="number"
+                formControlName="puntajeObtenido"
+                [max]="pruebaSeleccionada.puntajeMaximo"
+                step="0.5"
+              />
+              <small
+                *ngIf="formCalificarPrueba.get('puntajeObtenido')?.invalid && formCalificarPrueba.get('puntajeObtenido')?.touched"
+                class="error"
+              >
+                Ingrese un puntaje válido entre 0 y {{ pruebaSeleccionada.puntajeMaximo }}
+              </small>
+            </div>
+
+            <div class="form-group">
+              <label>Observaciones (opcional)</label>
+              <textarea formControlName="observaciones" rows="3"></textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="btn-guardar"
+              [disabled]="formCalificarPrueba.invalid || guardandoPrueba"
+            >
+              {{ guardandoPrueba ? 'Guardando...' : 'Guardar calificación' }}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div *ngIf="detalle.pruebas.length > 0" class="pruebas-evaluadas">
+        <h4>Pruebas evaluadas</h4>
+        <div *ngFor="let prueba of detalle.pruebas" class="prueba-evaluada-item">
+          <div class="prueba-nombre">{{ prueba.nombrePrueba }}</div>
+          <div class="puntaje" [class.aprobado]="prueba.aprobado" [class.desaprobado]="!prueba.aprobado">
+            {{ prueba.puntajeObtenido }} / {{ prueba.puntajeMaximo }} pts
+            <span class="estado">{{ prueba.aprobado ? 'Aprobado' : 'Desaprobado' }}</span>
+          </div>
+          <div *ngIf="prueba.observaciones" class="observaciones">
+            {{ prueba.observaciones }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="seccionActiva === 'meritos'" class="seccion-content">
+      <h3>Valorar méritos</h3>
+
+      <form [formGroup]="formValorarMeritos" (ngSubmit)="valorarTodosMeritos()">
+        <div class="meritos-lista">
+          <div *ngFor="let merito of detalle.meritos" class="merito-item">
+            <div class="merito-header">
+              <h4>{{ merito.nombreItem }}</h4>
+              <span class="categoria-badge">{{ merito.categoria }}</span>
+              <span class="puntaje-max">Máx: {{ merito.puntajeMaximo }} pts</span>
+            </div>
+
+            <div *ngIf="merito.documentoRespaldo" class="documento">
+              Documento: {{ merito.documentoRespaldo }}
+            </div>
+
+            <div class="merito-evaluacion">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Puntaje asignado</label>
+                  <input
+                    type="number"
+                    [formControlName]="'puntaje_' + merito.meritoPostulanteId"
+                    [max]="merito.puntajeMaximo"
+                    step="0.5"
+                  />
+                </div>
+
+                <div class="form-group checkbox">
+                  <label>
+                    <input
+                      type="checkbox"
+                      [formControlName]="'verificado_' + merito.meritoPostulanteId"
+                    />
+                    Documentación verificada
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Observaciones</label>
+                <textarea
+                  [formControlName]="'observaciones_' + merito.meritoPostulanteId"
+                  rows="2"
+                ></textarea>
+              </div>
+            </div>
+
+            <div *ngIf="merito.fueEvaluado" class="evaluacion-previa">
+              <span class="badge-evaluado" [class.aprobado]="merito.estado === 'Aprobado'">
+                {{ merito.estado }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn-guardar-meritos"
+          [disabled]="formValorarMeritos.invalid || guardandoMeritos"
+        >
+          {{ guardandoMeritos ? 'Guardando...' : 'Guardar valoración de méritos' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

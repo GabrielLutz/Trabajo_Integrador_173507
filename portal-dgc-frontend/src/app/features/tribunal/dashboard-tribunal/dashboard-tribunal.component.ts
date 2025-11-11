@@ -58,4 +58,16 @@ export class DashboardTribunalComponent implements OnInit {
   calcularPorcentaje(valor: number, total: number): number {
     return total > 0 ? Math.round((valor / total) * 100) : 0;
   }
+
+  obtenerTotalGeneral(): number {
+    if (!this.estadisticas) {
+      return 0;
+    }
+
+    const { totalInscripciones, totalAfrodescendientes, totalTrans, totalDiscapacidad } = this.estadisticas;
+    return Math.max(
+      0,
+      totalInscripciones - totalAfrodescendientes - totalTrans - totalDiscapacidad
+    );
+  }
 }

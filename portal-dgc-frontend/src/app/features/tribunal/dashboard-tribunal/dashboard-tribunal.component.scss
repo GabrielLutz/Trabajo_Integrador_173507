@@ -217,6 +217,10 @@
       background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     }
 
+    &.general {
+      background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
+    }
+
     .universo-icon {
       font-size: 3rem;
       margin-bottom: 0.5rem;
@@ -238,6 +242,11 @@
       padding: 0.3rem 1rem;
       border-radius: 20px;
       font-size: 0.9rem;
+
+      &.sin-cuota {
+        background: rgba(255, 255, 255, 0.45);
+        color: #2c3e50;
+      }
     }
   }
 
