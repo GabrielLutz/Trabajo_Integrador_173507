@@ -1,4 +1,158 @@
-<section class="tribunal-card">
-  <h2>Inscripciones del llamado</h2>
-  <p>Acá se listarán las inscripciones para evaluar cuando integremos los datos reales.</p>
-</section>
+<div class="lista-inscripciones">
+  <div class="header">
+    <button class="btn-back" (click)="volver()">← Volver</button>
+    <h1>Inscripciones para Evaluar</h1>
+  </div>
+
+  <div class="filtros-section">
+    <div class="filtros-grid">
+      <div class="filtro-item">
+        <label>Buscar por nombre o cédula</label>
+        <input
+          type="text"
+          [(ngModel)]="filtroNombre"
+          (input)="aplicarFiltros()"
+          placeholder="Ej: Juan Perez"
+        />
+      </div>
+
+      <div class="filtro-item">
+        <label>Departamento</label>
+        <select [(ngModel)]="filtroDepartamento" (change)="aplicarFiltros()">
+          <option value="">Todos</option>
+          <option *ngFor="let dep of departamentos" [value]="dep">{{ dep }}</option>
+        </select>
+      </div>
+
+      <div class="filtro-item">
+        <label>Estado de Evaluación</label>
+        <select [(ngModel)]="filtroEstado" (change)="aplicarFiltros()">
+          <option value="">Todos</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="En Proceso">En Proceso</option>
+          <option value="Completa">Completa</option>
+        </select>
+      </div>
+
+      <div class="filtro-item">
+        <label>Universo</label>
+        <select [(ngModel)]="filtroUniverso" (change)="aplicarFiltros()">
+          <option value="">Todos</option>
+          <option value="afro">Afrodescendiente</option>
+          <option value="trans">Trans</option>
+          <option value="discapacidad">Discapacidad</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-limpiar" (click)="limpiarFiltros()">Limpiar filtros</button>
+  </div>
+
+  <div class="resultados-info">
+    <p>
+      Mostrando <strong>{{ inscripcionesFiltradas.length }}</strong> de
+      <strong>{{ inscripciones.length }}</strong> inscripciones
+    </p>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Cargando inscripciones...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+    <button class="btn-retry" (click)="cargarInscripciones()">Reintentar</button>
+  </div>
+
+  <div *ngIf="!loading && inscripcionesFiltradas.length === 0" class="empty-state">
+    <p>No hay inscripciones que coincidan con los filtros</p>
+  </div>
+
+  <div *ngIf="!loading && inscripcionesFiltradas.length > 0" class="tabla-container">
+    <table class="tabla-inscripciones">
+      <thead>
+        <tr>
+          <th>Postulante</th>
+          <th>Departamento</th>
+          <th>Universos</th>
+          <th>Progreso</th>
+          <th>Puntaje</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let inscripcion of inscripcionesFiltradas">
+          <td class="postulante-info">
+            <div class="nombre">{{ inscripcion.nombreCompleto }}</div>
+            <div class="cedula">CI: {{ inscripcion.cedulaIdentidad }}</div>
+          </td>
+
+          <td>{{ inscripcion.departamento }}</td>
+
+          <td>
+            <div class="universos-badges">
+              <span *ngIf="inscripcion.esAfrodescendiente" class="badge-universo afro" title="Afrodescendiente">
+                <span aria-hidden="true">*</span>
+              </span>
+              <span *ngIf="inscripcion.esTrans" class="badge-universo trans" title="Trans">
+                <span aria-hidden="true">T</span>
+              </span>
+              <span *ngIf="inscripcion.tieneDiscapacidad" class="badge-universo disc" title="Discapacidad">
+                <span aria-hidden="true">D</span>
+              </span>
+              <span
+                *ngIf="!inscripcion.esAfrodescendiente && !inscripcion.esTrans && !inscripcion.tieneDiscapacidad"
+                class="badge-universo general"
+              >
+                General
+              </span>
+            </div>
+          </td>
+
+          <td>
+            <div class="progreso-container">
+              <div class="progreso-bar">
+                <div class="progreso-fill" [style.width.%]="getProgresoEvaluacion(inscripcion)"></div>
+              </div>
+              <span class="progreso-text">{{ getProgresoEvaluacion(inscripcion) }}%</span>
+            </div>
+            <div class="progreso-detalle">
+              Pruebas: {{ inscripcion.pruebasEvaluadas }}/{{ inscripcion.pruebasTotales }} |
+              Meritos: {{ inscripcion.meritosEvaluados }}/{{ inscripcion.meritosTotales }}
+            </div>
+          </td>
+
+          <td>
+            <div class="puntaje-info" *ngIf="inscripcion.puntajeTotal !== null && inscripcion.puntajeTotal !== undefined">
+              <div class="puntaje-total">{{ inscripcion.puntajeTotal | number: '1.1-1' }} pts</div>
+              <div class="puntaje-detalle">
+                Pruebas: {{ (inscripcion.puntajePruebas || 0) | number: '1.0-0' }} |
+                Meritos: {{ (inscripcion.puntajeMeritos || 0) | number: '1.0-0' }}
+              </div>
+              <div *ngIf="inscripcion.aproboPruebas === false" class="desaprobado">
+                No aprobo pruebas
+              </div>
+            </div>
+            <span *ngIf="inscripcion.puntajeTotal === null || inscripcion.puntajeTotal === undefined" class="sin-puntaje">
+              Sin evaluar
+            </span>
+          </td>
+
+          <td>
+            <span class="badge" [ngClass]="getEstadoBadgeClass(getEstadoEvaluacion(inscripcion))">
+              {{ getEstadoEvaluacion(inscripcion) }}
+            </span>
+          </td>
+
+          <td>
+            <button class="btn-evaluar" (click)="verDetalle(inscripcion.inscripcionId)">
+              Ver detalle
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
