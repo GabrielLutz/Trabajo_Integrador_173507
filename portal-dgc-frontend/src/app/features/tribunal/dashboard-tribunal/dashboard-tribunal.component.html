@@ -1,4 +1,141 @@
-<section class="tribunal-card">
-  <h1>Panel del tribunal</h1>
-  <p>Seleccioná un llamado para revisar inscripciones, calificar pruebas y gestionar ordenamientos.</p>
-</section>
+<div class="dashboard-tribunal">
+  <div class="header-section">
+    <h1>Dashboard del Tribunal Evaluador</h1>
+    <p class="subtitle" *ngIf="estadisticas">{{ estadisticas.tituloLlamado }}</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando estadisticas...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+    <button class="btn-secondary" (click)="cargarEstadisticas()">Reintentar</button>
+  </div>
+
+  <div *ngIf="estadisticas && !loading" class="dashboard-content">
+    <div class="stats-cards">
+      <div class="stat-card">
+        <div class="stat-icon inscripciones">&#x1F4DD;</div>
+        <div class="stat-info">
+          <h3>{{ estadisticas.totalInscripciones }}</h3>
+          <p>Total Inscripciones</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon evaluadas">&#x2705;</div>
+        <div class="stat-info">
+          <h3>{{ estadisticas.inscripcionesConPruebasCompletas }}</h3>
+          <p>Pruebas Completas</p>
+          <span class="percentage">
+            {{ calcularPorcentaje(estadisticas.inscripcionesConPruebasCompletas, estadisticas.totalInscripciones) }}%
+          </span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon aprobados">&#x1F3C6;</div>
+        <div class="stat-info">
+          <h3>{{ estadisticas.aprobadosFinal }}</h3>
+          <p>Aprobados (&#8805;70 pts)</p>
+          <span class="percentage">
+            {{ calcularPorcentaje(estadisticas.aprobadosFinal, estadisticas.totalInscripciones) }}%
+          </span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon promedio">&#x1F4CA;</div>
+        <div class="stat-info">
+          <h3>{{ estadisticas.promedioGeneral | number: '1.1-1' }}</h3>
+          <p>Promedio General</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pruebas-section">
+      <h2>Detalle por Prueba</h2>
+      <div class="pruebas-grid">
+        <div *ngFor="let prueba of estadisticas.detallesPruebas" class="prueba-card">
+          <h3>{{ prueba.nombrePrueba }}</h3>
+          <div class="prueba-stats">
+            <div class="stat-row">
+              <span class="label">Evaluados:</span>
+              <span class="value">{{ prueba.evaluados }} / {{ estadisticas.totalInscripciones }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="label">Aprobados:</span>
+              <span class="value">
+                {{ prueba.aprobados }} ({{ calcularPorcentaje(prueba.aprobados, prueba.evaluados) }}%)
+              </span>
+            </div>
+            <div class="stat-row">
+              <span class="label">Promedio:</span>
+              <span class="value">{{ prueba.promedioNota | number: '1.1-1' }} pts</span>
+            </div>
+          </div>
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              [style.width.%]="calcularPorcentaje(prueba.aprobados, prueba.evaluados)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="universos-section">
+      <h2>Universos por Ley de Cuotas</h2>
+      <div class="universos-grid">
+        <div class="universo-card afro">
+          <div class="universo-icon">&#x1F30D;</div>
+          <h3>{{ estadisticas.totalAfrodescendientes }}</h3>
+          <p>Afrodescendientes</p>
+          <span class="cuota-badge">8% cuota</span>
+        </div>
+
+        <div class="universo-card trans">
+          <div class="universo-icon">&#x1F3F3;&#xFE0F;&#x200D;&#x26A7;&#xFE0F;</div>
+          <h3>{{ estadisticas.totalTrans }}</h3>
+          <p>Trans</p>
+          <span class="cuota-badge">1% cuota</span>
+        </div>
+
+        <div class="universo-card discapacidad">
+          <div class="universo-icon">&#x267F;</div>
+          <h3>{{ estadisticas.totalDiscapacidad }}</h3>
+          <p>Discapacidad</p>
+          <span class="cuota-badge">4% cuota</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ordenamiento-section">
+      <h2>Estado del Ordenamiento</h2>
+      <div class="ordenamiento-card" [class.generado]="estadisticas.ordenamientoGenerado">
+        <div class="ordenamiento-icon" [innerHTML]="estadisticas.ordenamientoGenerado ? '&#x2705;' : '&#x23F3;'"></div>
+        <div class="ordenamiento-info">
+          <h3>{{ estadisticas.ordenamientoGenerado ? 'Ordenamiento Generado' : 'Pendiente de Generar' }}</h3>
+          <p *ngIf="estadisticas.ordenamientoGenerado && estadisticas.fechaOrdenamiento">
+            Generado el {{ estadisticas.fechaOrdenamiento | date: 'dd/MM/yyyy HH:mm' }}
+          </p>
+          <p *ngIf="!estadisticas.ordenamientoGenerado">
+            Completa las evaluaciones para generar el ordenamiento final
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions-section">
+      <button class="btn-primary" (click)="irAInscripciones()">Ver Inscripciones</button>
+      <button
+        class="btn-success"
+        [disabled]="estadisticas.inscripcionesConPruebasCompletas === 0"
+        (click)="irAGenerarOrdenamiento()">
+        Generar Ordenamiento
+      </button>
+    </div>
+  </div>
+</div>
