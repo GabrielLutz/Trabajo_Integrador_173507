@@ -12,8 +12,7 @@ import { VerOrdenamientoComponent } from './ver-ordenamiento/ver-ordenamiento.co
 
 @NgModule({
   declarations: [
-    DashboardTribunalComponent,
-    VerOrdenamientoComponent
+    DashboardTribunalComponent
   ],
   imports: [
     CommonModule,
@@ -22,6 +21,7 @@ import { VerOrdenamientoComponent } from './ver-ordenamiento/ver-ordenamiento.co
     ListaInscripcionesComponent,
     DetalleEvaluacionComponent,
     GenerarOrdenamientoComponent,
+    VerOrdenamientoComponent,
     TribunalRoutingModule,
     SharedModule
   ]
