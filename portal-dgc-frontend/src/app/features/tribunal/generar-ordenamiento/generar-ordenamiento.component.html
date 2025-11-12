@@ -1,4 +1,271 @@
-<section class="tribunal-card">
-  <h2>Generar ordenamiento</h2>
-  <p>Desde acá se configurará el ordenamiento del llamado una vez finalizada la evaluación.</p>
-</section>
+<div class="generar-ordenamiento">
+  <div class="header">
+    <button class="btn-back" (click)="volver()">← Volver</button>
+    <h1>Generar Ordenamiento Final</h1>
+  </div>
+
+  <!-- Wizard Progress -->
+  <div class="wizard-progress">
+    <div class="step" [class.active]="pasoActual >= 1" [class.completed]="pasoActual > 1">
+      <div class="step-number">1</div>
+      <div class="step-label">Configuración</div>
+    </div>
+    <div class="step-line" [class.completed]="pasoActual > 1"></div>
+    <div class="step" [class.active]="pasoActual >= 2" [class.completed]="pasoActual > 2">
+      <div class="step-number">2</div>
+      <div class="step-label">Previsualización</div>
+    </div>
+    <div class="step-line" [class.completed]="pasoActual > 2"></div>
+    <div class="step" [class.active]="pasoActual >= 3">
+      <div class="step-number">3</div>
+      <div class="step-label">Resultado</div>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- PASO 1: Configuración -->
+  <div *ngIf="pasoActual === 1" class="paso-content">
+    <div class="paso-card">
+      <h2>Configuración del Ordenamiento</h2>
+      <p class="descripcion">
+        Configura los parámetros para generar el ordenamiento final del llamado.
+      </p>
+
+      <form [formGroup]="form">
+        <div class="form-group">
+          <label>Puntaje Mínimo de Aprobación</label>
+          <input 
+            type="number" 
+            formControlName="puntajeMinimoAprobacion"
+            min="0"
+            max="100">
+          <small class="help-text">
+            Los postulantes con puntaje inferior no serán incluidos en el ordenamiento
+          </small>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="aplicarCuotas">
+            <span class="checkbox-text">
+              <strong>Aplicar Cuotas de Ley</strong>
+              <small>8% Afrodescendiente | 1% Trans | 4% Discapacidad</small>
+            </span>
+          </label>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="esDefinitivo">
+            <span class="checkbox-text">
+              <strong>Marcar como Definitivo</strong>
+              <small>Si no se marca, se generará como Preliminar</small>
+            </span>
+          </label>
+        </div>
+      </form>
+
+      <div class="preview-stats">
+        <h3>Información del Llamado</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-label">Total Inscripciones</div>
+            <div class="stat-value">{{ previewInscripciones.length }}</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Aprobados (≥{{ puntajeMinimoAprobacion }} pts)</div>
+            <div class="stat-value success">{{ getCantidadAprobados() }}</div>
+          </div>
+        </div>
+
+        <div *ngIf="aplicarCuotas" class="cuotas-preview">
+          <h4>Distribución por Universos</h4>
+          <div class="universos-grid">
+            <div class="universo-item afro">
+              <span class="emoji">🌍</span>
+              <span class="cantidad">{{ getCantidadPorUniverso('afro') }}</span>
+              <span class="label">Afrodescendientes</span>
+            </div>
+            <div class="universo-item trans">
+              <span class="emoji">🏳️‍⚧️</span>
+              <span class="cantidad">{{ getCantidadPorUniverso('trans') }}</span>
+              <span class="label">Trans</span>
+            </div>
+            <div class="universo-item disc">
+              <span class="emoji">♿</span>
+              <span class="cantidad">{{ getCantidadPorUniverso('disc') }}</span>
+              <span class="label">Discapacidad</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" (click)="siguientePaso()" [disabled]="form.invalid">
+          Siguiente →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 2: Previsualización -->
+  <div *ngIf="pasoActual === 2" class="paso-content">
+    <div class="paso-card">
+      <h2>Previsualización del Ordenamiento</h2>
+      <p class="descripcion">
+        Verifica que los datos sean correctos antes de generar el ordenamiento oficial.
+      </p>
+
+      <div class="config-resumen">
+        <div class="config-item">
+          <span class="label">Puntaje Mínimo:</span>
+          <span class="value">{{ puntajeMinimoAprobacion }} puntos</span>
+        </div>
+        <div class="config-item">
+          <span class="label">Cuotas de Ley:</span>
+          <span class="value">{{ aplicarCuotas ? 'Sí' : 'No' }}</span>
+        </div>
+        <div class="config-item">
+          <span class="label">Tipo:</span>
+          <span class="value">{{ esDefinitivo ? 'Definitivo' : 'Preliminar' }}</span>
+        </div>
+      </div>
+
+      <div class="tabla-preview">
+        <h3>Top 10 Postulantes</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Pos.</th>
+              <th>Nombre</th>
+              <th>CI</th>
+              <th>Universo</th>
+              <th>Puntaje</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let inscripcion of previewInscripciones.slice(0, 10); let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ inscripcion.nombreCompleto }}</td>
+              <td>{{ inscripcion.cedulaIdentidad }}</td>
+              <td>
+                <div class="universos-badges">
+                  <span *ngIf="inscripcion.esAfrodescendiente" class="badge afro">🌍</span>
+                  <span *ngIf="inscripcion.esTrans" class="badge trans">🏳️‍⚧️</span>
+                  <span *ngIf="inscripcion.tieneDiscapacidad" class="badge disc">♿</span>
+                </div>
+              </td>
+              <td class="puntaje">{{ (inscripcion.puntajeTotal ?? 0) | number:'1.1-1' }}</td>
+              <td>
+                <span 
+                  class="badge-estado"
+                  [class.aprobado]="esAprobado(inscripcion)"
+                  [class.reprobado]="!esAprobado(inscripcion)">
+                  {{ esAprobado(inscripcion) ? 'Aprobado' : 'Reprobado' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="warning-box">
+        <strong>⚠️ Importante:</strong>
+  <p>Una vez generado el ordenamiento {{ esDefinitivo ? 'definitivo' : 'preliminar' }}, 
+        quedará registrado en el sistema. Verifica que toda la información sea correcta.</p>
+      </div>
+
+      <div class="actions">
+        <button class="btn-secondary" (click)="pasoAnterior()">
+          ← Anterior
+        </button>
+        <button 
+          class="btn-success" 
+          (click)="generarOrdenamiento()"
+          [disabled]="generando || getCantidadAprobados() === 0">
+          {{ generando ? 'Generando...' : 'Generar Ordenamiento' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 3: Resultado -->
+  <div *ngIf="pasoActual === 3 && resultado" class="paso-content">
+    <div class="paso-card resultado">
+      <div class="success-icon">✅</div>
+      <h2>¡Ordenamiento Generado Exitosamente!</h2>
+      <p class="descripcion">
+        Se han generado {{ resultado.ordenamientosGenerados?.length || 0 }} ordenamiento(s)
+      </p>
+
+      <div class="estadisticas-resultado">
+        <div class="stat-card">
+          <div class="stat-numero">{{ resultado.estadisticas?.totalAprobados || 0 }}</div>
+          <div class="stat-label">Aprobados</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-numero">{{ resultado.estadisticas?.totalReprobados || 0 }}</div>
+          <div class="stat-label">Reprobados</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-numero">{{ resultado.estadisticas?.puntajePromedio | number:'1.1-1' }}</div>
+          <div class="stat-label">Promedio</div>
+        </div>
+      </div>
+
+  <div *ngIf="aplicarCuotas && resultado.estadisticas" class="cuotas-aplicadas">
+        <h3>Cuotas Aplicadas</h3>
+        <div class="cuotas-grid">
+          <div class="cuota-card afro">
+            <div class="cuota-emoji">🌍</div>
+            <div class="cuota-info">
+              <div class="cuota-numero">{{ resultado.estadisticas.cuotaAfroAplicada }}</div>
+              <div class="cuota-texto">Afrodescendientes (8%)</div>
+            </div>
+          </div>
+          <div class="cuota-card trans">
+            <div class="cuota-emoji">🏳️‍⚧️</div>
+            <div class="cuota-info">
+              <div class="cuota-numero">{{ resultado.estadisticas.cuotaTransAplicada }}</div>
+              <div class="cuota-texto">Trans (1%)</div>
+            </div>
+          </div>
+          <div class="cuota-card disc">
+            <div class="cuota-emoji">♿</div>
+            <div class="cuota-info">
+              <div class="cuota-numero">{{ resultado.estadisticas.cuotaDiscapacidadAplicada }}</div>
+              <div class="cuota-texto">Discapacidad (4%)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ordenamientos-generados">
+        <h3>Ordenamientos Generados</h3>
+        <div class="ordenamiento-lista">
+          <div *ngFor="let ord of resultado.ordenamientosGenerados" class="ordenamiento-item">
+            <div class="ordenamiento-info">
+              <span class="tipo-badge" [ngClass]="'tipo-' + ord.tipo.toLowerCase()">
+                {{ ord.tipo }}
+              </span>
+              <span class="cantidad">{{ ord.cantidadPosiciones }} posiciones</span>
+            </div>
+            <button class="btn-ver" (click)="verOrdenamiento(ord.id)">
+              Ver Detalle →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" (click)="volver()">
+          Volver al Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
