@@ -9,7 +9,7 @@
 			</button>
 			<h1>{{ llamado.titulo }}</h1>
 			<div class="info-header">
-				<span class="badge badge-success">{{ llamado.estado }}</span>
+				<span class="badge" [ngClass]="getEstadoBadgeClass()">{{ llamado.estado }}</span>
 				<span class="puestos">{{ llamado.cantidadPuestos }} puestos disponibles</span>
 			</div>
 		</div>
@@ -119,10 +119,18 @@
 			</div>
 		</div>
 
-		<div class="actions">
-			<button class="btn btn-primary btn-large" (click)="inscribirse()">
-				Inscribirse a este Llamado
+		<div class="actions" *ngIf="llamado">
+			<button
+				class="btn btn-primary btn-large"
+				type="button"
+				(click)="inscribirse()"
+				[disabled]="!puedeInscribirse"
+			>
+				{{ puedeInscribirse ? 'Inscribirse a este Llamado' : 'Inscripción no disponible' }}
 			</button>
+			<p class="nota" *ngIf="!puedeInscribirse">
+				Este llamado ya no admite nuevas inscripciones.
+			</p>
 		</div>
 	</div>
 </div>

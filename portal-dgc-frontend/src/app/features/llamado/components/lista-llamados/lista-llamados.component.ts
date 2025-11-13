@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { ApiResponse } from '../../../../core/models/api-response.model';
 import { Llamado } from '../../../../core/models/llamado.model';
 import { LlamadoService } from '../../../../core/services/llamado.service';
@@ -11,9 +12,11 @@ import { LlamadoService } from '../../../../core/services/llamado.service';
   styleUrls: ['./lista-llamados.component.scss']
 })
 export class ListaLlamadosComponent implements OnInit {
-  llamados: Llamado[] = [];
+  llamadosActivos: Llamado[] = [];
+  llamadosInactivos: Llamado[] = [];
   loading = false;
   error = '';
+  estadoSeleccionado: 'activos' | 'inactivos' = 'activos';
 
   constructor(
     private readonly llamadoService: LlamadoService,
@@ -26,11 +29,18 @@ export class ListaLlamadosComponent implements OnInit {
 
   cargarLlamados(): void {
     this.loading = true;
-    this.llamadoService.obtenerLlamadosActivos().subscribe({
-      next: (response: ApiResponse<Llamado[]>) => {
-        if (response.success && response.data) {
-          this.llamados = response.data;
+    forkJoin({
+      activos: this.llamadoService.obtenerLlamadosActivos(),
+      inactivos: this.llamadoService.obtenerLlamadosInactivos()
+    }).subscribe({
+      next: ({ activos, inactivos }) => {
+        this.llamadosActivos = activos.success && activos.data ? activos.data : [];
+        this.llamadosInactivos = inactivos.success && inactivos.data ? inactivos.data : [];
+
+        if (!activos.success && !inactivos.success) {
+          this.error = 'No pudimos obtener los llamados en este momento.';
         }
+
         this.loading = false;
       },
       error: () => {
@@ -55,5 +65,15 @@ export class ListaLlamadosComponent implements OnInit {
     const cierre = new Date(fechaCierre);
     const diffTime = cierre.getTime() - hoy.getTime();
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }
+
+  seleccionarEstado(estado: 'activos' | 'inactivos'): void {
+    this.estadoSeleccionado = estado;
+  }
+
+  get llamadosVisibles(): Llamado[] {
+    return this.estadoSeleccionado === 'activos'
+      ? this.llamadosActivos
+      : this.llamadosInactivos;
   }
 }

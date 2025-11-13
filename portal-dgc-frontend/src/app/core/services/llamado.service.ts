@@ -16,6 +16,10 @@ export class LlamadoService {
     return this.apiService.get<ApiResponse<Llamado[]>>(`${this.endpoint}/activos`);
   }
 
+  obtenerLlamadosInactivos(): Observable<ApiResponse<Llamado[]>> {
+    return this.apiService.get<ApiResponse<Llamado[]>>(`${this.endpoint}/inactivos`);
+  }
+
   obtenerLlamadoDetalle(id: number): Observable<ApiResponse<LlamadoDetalle>> {
     return this.apiService.get<ApiResponse<LlamadoDetalle>>(`${this.endpoint}/${id}`);
   }

@@ -50,7 +50,7 @@ export class DetalleLlamadoComponent implements OnInit {
   }
 
   inscribirse(): void {
-    if (this.llamado) {
+    if (this.llamado && this.puedeInscribirse) {
       this.router.navigate(['/inscripcion', 'nuevo'], {
         queryParams: { llamadoId: this.llamado.id }
       });
@@ -59,5 +59,35 @@ export class DetalleLlamadoComponent implements OnInit {
 
   volver(): void {
     this.router.navigate(['/llamados']);
+  }
+
+  get puedeInscribirse(): boolean {
+    if (!this.llamado) {
+      return false;
+    }
+
+    if (typeof this.llamado.estaHabilitadoInscripcion === 'boolean') {
+      return this.llamado.estaHabilitadoInscripcion;
+    }
+
+    return this.llamado.estado?.toLowerCase() === 'activo';
+  }
+
+  getEstadoBadgeClass(): string {
+    const estado = this.llamado?.estado?.toLowerCase() ?? '';
+
+    if (estado === 'activo' || estado === 'abierto') {
+      return 'badge-success';
+    }
+
+    if (['cerrado', 'inactivo', 'finalizado'].includes(estado)) {
+      return 'badge-danger';
+    }
+
+    if (['pendiente', 'proximamente'].includes(estado)) {
+      return 'badge-warning';
+    }
+
+    return 'badge-secondary';
   }
 }

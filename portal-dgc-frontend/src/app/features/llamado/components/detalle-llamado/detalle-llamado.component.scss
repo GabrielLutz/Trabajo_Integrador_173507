@@ -40,6 +40,21 @@
 				background-color: #4caf50;
 				color: #fff;
 			}
+
+			&.badge-danger {
+				background-color: #ef5350;
+				color: #fff;
+			}
+
+			&.badge-warning {
+				background-color: #ffb300;
+				color: #fff;
+			}
+
+			&.badge-secondary {
+				background-color: #90a4ae;
+				color: #fff;
+			}
 		}
 
 		.puestos {
@@ -261,6 +276,12 @@
 		padding: 1rem 3rem;
 		font-size: 1.1rem;
 	}
+
+	.nota {
+		margin-top: 0.75rem;
+		color: #607d8b;
+		font-size: 0.95rem;
+	}
 }
 
 .btn {
@@ -277,5 +298,11 @@
 
 	&:hover {
 		background-color: #1976d2;
+	}
+
+	&:disabled {
+		background-color: #bbdefb;
+		color: #1565c0;
+		cursor: not-allowed;
 	}
 }
