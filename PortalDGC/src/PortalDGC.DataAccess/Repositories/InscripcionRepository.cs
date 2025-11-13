@@ -44,6 +44,7 @@ namespace PortalDGC.DataAccess.Repositories
             return await _dbSet
                 .Include(i => i.Postulante)
                 .Include(i => i.Departamento)
+                .Include(i => i.AutodefinicionLey)
                 .Where(i => i.LlamadoId == llamadoId)
                 .ToListAsync();
         }
