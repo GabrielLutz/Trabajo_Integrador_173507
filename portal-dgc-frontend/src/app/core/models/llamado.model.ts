@@ -5,6 +5,7 @@ export interface Llamado {
   fechaApertura: Date;
   fechaCierre: Date;
   estado: string;
+  estaHabilitadoInscripcion?: boolean;
 }
 
 export interface LlamadoDetalle {
@@ -16,6 +17,7 @@ export interface LlamadoDetalle {
   fechaCierre: Date;
   cantidadPuestos: number;
   estado: string;
+  estaHabilitadoInscripcion?: boolean;
   departamentos: DepartamentoLlamado[];
   requisitosExcluyentes: RequisitoExcluyente[];
   itemsPuntuables: ItemPuntuable[];
