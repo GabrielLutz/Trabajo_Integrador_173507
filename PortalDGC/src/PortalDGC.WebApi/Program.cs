@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using PortalDGC.BusinessLogic.Interfaces;
 using PortalDGC.BusinessLogic.Services;
 using PortalDGC.DataAccess.Data;
@@ -29,9 +30,22 @@ builder.Services.AddControllers();
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //    options.UseInMemoryDatabase("PortalDGCDev"));
 
-// Database Context
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Database Context - Usar InMemory en Testing, SqlServer en otros ambientes
+if (builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    {
+        options.UseInMemoryDatabase("PortalDGCTestDb");
+        // Ignorar advertencias de transacciones para InMemory
+        options.ConfigureWarnings(warnings => 
+            warnings.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+    });
+}
+else
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
 
 // Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -76,18 +90,26 @@ app.UseCors("AllowAll");
 app.UseAuthorization();
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
+// Solo inicializar la BD en Development/Production, NO en Testing
+if (!app.Environment.IsEnvironment("Testing"))
 {
-    var services = scope.ServiceProvider;
-    try
+    using (var scope = app.Services.CreateScope())
     {
-        var context = services.GetRequiredService<ApplicationDbContext>();
-        DbInitializer.Initialize(context);
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Error al inicializar BD: {Message}", ex.Message);
+        var services = scope.ServiceProvider;
+        try
+        {
+            var context = services.GetRequiredService<ApplicationDbContext>();
+            DbInitializer.Initialize(context);
+        }
+        catch (Exception ex)
+        {
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogError(ex, "Error al inicializar BD: {Message}", ex.Message);
+        }
     }
 }
+
 app.Run();
+
+// Hacer la clase Program pública para que sea accesible en los tests de integración
+public partial class Program { }
