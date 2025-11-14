@@ -159,5 +159,17 @@ namespace PortalDGC.Tests.Controllers
             Assert.Equal(bytes, file.FileContents);
             Assert.Equal("application/octet-stream", file.ContentType);
         }
+
+        [Fact]
+        public async Task SubirConstancia_ModelStateInvalido_RetornaBadRequest()
+        {
+            _controller.ModelState.AddModelError("Nombre", "Requerido");
+
+            var result = await _controller.SubirConstancia(2, new SubirConstanciaDto());
+
+            var badRequest = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Same(_controller.ModelState, badRequest.Value);
+            _serviceMock.Verify(s => s.SubirConstanciaAsync(It.IsAny<int>(), It.IsAny<SubirConstanciaDto>()), Times.Never);
+        }
     }
 }

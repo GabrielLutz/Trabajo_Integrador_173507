@@ -227,6 +227,248 @@ namespace PortalDGC.Tests.Services
         }
 
         [Fact]
+        public async Task ValorarMeritosAsync_MezclaValida_SoloProcesaPermitidos()
+        {
+            var meritoValido = new MeritoPostulante { Id = 1, ItemPuntuableId = 5, DocumentoRespaldo = "doc" };
+            var itemValido = new ItemPuntuable { Id = 5, PuntajeMaximo = 50, Nombre = "Curso", Categoria = "Formacion" };
+
+            _meritosMock.Setup(r => r.GetByIdAsync(meritoValido.Id)).ReturnsAsync(meritoValido);
+            _meritosMock.Setup(r => r.GetByIdAsync(999)).ReturnsAsync((MeritoPostulante?)null);
+            _itemsMock.Setup(r => r.GetByIdAsync(itemValido.Id)).ReturnsAsync(itemValido);
+            _evaluacionesMeritosMock.Setup(r => r.GetByMeritoIdAsync(meritoValido.Id)).ReturnsAsync((EvaluacionMerito?)null);
+            _evaluacionesMeritosMock
+                .Setup(r => r.AddAsync(It.IsAny<EvaluacionMerito>()))
+                .ReturnsAsync((EvaluacionMerito e) =>
+                {
+                    e.Id = 22;
+                    return e;
+                });
+
+            var dtos = new List<ValorarMeritoDto>
+            {
+                new ValorarMeritoDto { MeritoPostulanteId = meritoValido.Id, PuntajeAsignado = 45, DocumentacionVerificada = true },
+                new ValorarMeritoDto { MeritoPostulanteId = 999, PuntajeAsignado = 10, DocumentacionVerificada = true }
+            };
+
+            var resultado = await _sut.ValorarMeritosAsync(12, dtos);
+
+            Assert.True(resultado.Success);
+            var data = AssertNotNull(resultado.Data);
+            Assert.Single(data);
+            Assert.Equal(22, data[0].Id);
+            Assert.Equal(45, data[0].PuntajeAsignado);
+            _unitOfWorkMock.Verify(u => u.CommitTransactionAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task ObtenerPruebasDelLlamadoAsync_MapeaEstadisticas()
+        {
+            var llamadoId = 7;
+            var prueba = new Prueba
+            {
+                Id = 15,
+                LlamadoId = llamadoId,
+                Nombre = "Escrito",
+                Tipo = "Escrito",
+                PuntajeMaximo = 100,
+                EsObligatoria = true
+            };
+
+            _pruebasMock.Setup(r => r.GetByLlamadoIdAsync(llamadoId)).ReturnsAsync(new List<Prueba> { prueba });
+            _evaluacionesPruebasMock
+                .Setup(r => r.GetByPruebaIdAsync(prueba.Id))
+                .ReturnsAsync(new List<EvaluacionPrueba>
+                {
+                    new EvaluacionPrueba { Aprobado = true, PuntajeObtenido = 80 },
+                    new EvaluacionPrueba { Aprobado = false, PuntajeObtenido = 60 }
+                });
+
+            var resultado = await _sut.ObtenerPruebasDelLlamadoAsync(llamadoId);
+
+            Assert.True(resultado.Success);
+            var data = AssertNotNull(resultado.Data);
+            Assert.Single(data);
+            Assert.Equal(2, data[0].CantidadEvaluados);
+            Assert.Equal(1, data[0].CantidadAprobados);
+            Assert.Equal(70, data[0].PromedioGeneral);
+        }
+
+        [Fact]
+        public async Task ObtenerOrdenamientosAsync_MapeaCantidadPosiciones()
+        {
+            var ordenamiento = new Ordenamiento
+            {
+                Id = 5,
+                LlamadoId = 2,
+                Tipo = "General",
+                Estado = "Preliminar",
+                FechaGeneracion = DateTime.UtcNow,
+                Llamado = new Llamado { Id = 2, Titulo = "Docente" },
+                DepartamentoId = 9,
+                Departamento = new Departamento { Id = 9, Nombre = "Canelones" }
+            };
+
+            _ordenamientosMock.Setup(r => r.GetByLlamadoIdAsync(2)).ReturnsAsync(new List<Ordenamiento> { ordenamiento });
+            _posicionesMock
+                .Setup(r => r.GetByOrdenamientoIdAsync(ordenamiento.Id))
+                .ReturnsAsync(new List<PosicionOrdenamiento>
+                {
+                    new PosicionOrdenamiento { Id = 1, OrdenamientoId = ordenamiento.Id, Posicion = 1, InscripcionId = 10 },
+                    new PosicionOrdenamiento { Id = 2, OrdenamientoId = ordenamiento.Id, Posicion = 2, InscripcionId = 11 }
+                });
+
+            var resultado = await _sut.ObtenerOrdenamientosAsync(2);
+
+            Assert.True(resultado.Success);
+            var data = AssertNotNull(resultado.Data);
+            Assert.Single(data);
+            Assert.Equal(2, data[0].CantidadPosiciones);
+            Assert.Equal("Docente", data[0].TituloLlamado);
+            Assert.Equal("Canelones", data[0].NombreDepartamento);
+        }
+
+        [Fact]
+        public async Task ObtenerDetalleOrdenamientoAsync_NoExiste_RetornaFallo()
+        {
+            _ordenamientosMock
+                .Setup(r => r.GetByIdWithPosicionesAsync(It.IsAny<int>()))
+                .ReturnsAsync((Ordenamiento?)null);
+
+            var resultado = await _sut.ObtenerDetalleOrdenamientoAsync(8);
+
+            Assert.False(resultado.Success);
+            Assert.Null(resultado.Data);
+            Assert.Contains("no encontrado", resultado.Message, StringComparison.OrdinalIgnoreCase);
+        }
+
+        [Fact]
+        public async Task ObtenerDetalleOrdenamientoAsync_MapeaPosiciones()
+        {
+            var inscripcion = CrearInscripcion();
+            var ordenamiento = new Ordenamiento
+            {
+                Id = 6,
+                Tipo = "General",
+                Estado = "Definitivo",
+                FechaGeneracion = DateTime.UtcNow,
+                Llamado = new Llamado { Id = inscripcion.LlamadoId, Titulo = "Docente" },
+                Posiciones = new List<PosicionOrdenamiento>
+                {
+                    new PosicionOrdenamiento
+                    {
+                        OrdenamientoId = 6,
+                        InscripcionId = inscripcion.Id,
+                        Posicion = 1,
+                        PuntajeTotal = 95,
+                        Inscripcion = inscripcion
+                    }
+                }
+            };
+
+            _ordenamientosMock
+                .Setup(r => r.GetByIdWithPosicionesAsync(ordenamiento.Id))
+                .ReturnsAsync(ordenamiento);
+
+            _evaluacionesPruebasMock
+                .Setup(r => r.GetByInscripcionIdAsync(inscripcion.Id))
+                .ReturnsAsync(new List<EvaluacionPrueba>
+                {
+                    new EvaluacionPrueba { PuntajeObtenido = 40 },
+                    new EvaluacionPrueba { PuntajeObtenido = 35 }
+                });
+
+            _evaluacionesMeritosMock
+                .Setup(r => r.GetByInscripcionIdAsync(inscripcion.Id))
+                .ReturnsAsync(new List<EvaluacionMerito>
+                {
+                    new EvaluacionMerito { Estado = "Aprobado", PuntajeAsignado = 20 },
+                    new EvaluacionMerito { Estado = "Rechazado", PuntajeAsignado = 50 }
+                });
+
+            var resultado = await _sut.ObtenerDetalleOrdenamientoAsync(ordenamiento.Id);
+
+            Assert.True(resultado.Success);
+            var data = AssertNotNull(resultado.Data);
+            Assert.Single(data.Posiciones);
+            var posicion = data.Posiciones[0];
+            Assert.Equal(75, posicion.PuntajePruebas);
+            Assert.Equal(20, posicion.PuntajeMeritos);
+            Assert.Equal("Docente", data.TituloLlamado);
+        }
+
+        [Fact]
+        public async Task ObtenerEstadisticasAsync_LlamadoNoExiste_RetornaFallo()
+        {
+            _llamadosMock
+                .Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync((Llamado?)null);
+
+            var resultado = await _sut.ObtenerEstadisticasAsync(2);
+
+            Assert.False(resultado.Success);
+            Assert.Contains("no encontrado", resultado.Message, StringComparison.OrdinalIgnoreCase);
+        }
+
+        [Fact]
+        public async Task ObtenerEstadisticasAsync_CalculaIndicadores()
+        {
+            var llamadoId = 4;
+            var llamado = new Llamado { Id = llamadoId, Titulo = "Docente" };
+            var inscripcion = CrearInscripcion();
+            inscripcion.LlamadoId = llamadoId;
+            inscripcion.AutodefinicionLey = new AutodefinicionLey { EsAfrodescendiente = true };
+
+            _llamadosMock.Setup(r => r.GetByIdAsync(llamadoId)).ReturnsAsync(llamado);
+            _inscripcionesMock.Setup(r => r.GetByLlamadoIdAsync(llamadoId)).ReturnsAsync(new List<Inscripcion> { inscripcion });
+
+            var pruebas = new List<Prueba> { new Prueba { Id = 9, Nombre = "Escrito" } };
+            _pruebasMock.Setup(r => r.GetByLlamadoIdAsync(llamadoId)).ReturnsAsync(pruebas);
+
+            _evaluacionesPruebasMock
+                .Setup(r => r.GetByInscripcionIdAsync(inscripcion.Id))
+                .ReturnsAsync(new List<EvaluacionPrueba>
+                {
+                    new EvaluacionPrueba { PruebaId = 9, PuntajeObtenido = 80, Aprobado = true },
+                    new EvaluacionPrueba { PruebaId = 10, PuntajeObtenido = 20, Aprobado = true }
+                });
+
+            _evaluacionesMeritosMock
+                .Setup(r => r.GetByInscripcionIdAsync(inscripcion.Id))
+                .ReturnsAsync(new List<EvaluacionMerito>
+                {
+                    new EvaluacionMerito { Estado = "Aprobado", PuntajeAsignado = 15 }
+                });
+
+            _meritosMock
+                .Setup(r => r.GetByInscripcionIdAsync(inscripcion.Id))
+                .ReturnsAsync(new List<MeritoPostulante> { new MeritoPostulante { Id = 1 } });
+
+            _evaluacionesPruebasMock
+                .Setup(r => r.GetByPruebaIdAsync(9))
+                .ReturnsAsync(new List<EvaluacionPrueba>
+                {
+                    new EvaluacionPrueba { PruebaId = 9, Aprobado = true, PuntajeObtenido = 80 }
+                });
+
+            _ordenamientosMock
+                .Setup(r => r.GetByLlamadoIdAsync(llamadoId))
+                .ReturnsAsync(new List<Ordenamiento>
+                {
+                    new Ordenamiento { Id = 1, Estado = "Definitivo", FechaGeneracion = DateTime.UtcNow }
+                });
+
+            var resultado = await _sut.ObtenerEstadisticasAsync(llamadoId);
+
+            Assert.True(resultado.Success);
+            var data = AssertNotNull(resultado.Data);
+            Assert.Equal(1, data.TotalInscripciones);
+            Assert.True(data.OrdenamientoGenerado);
+            Assert.Equal(1, data.TotalAfrodescendientes);
+            Assert.Equal(95, data.PromedioGeneral);
+            Assert.Single(data.DetallesPruebas);
+        }
+
+        [Fact]
         public async Task GenerarOrdenamientoAsync_SinInscripcionesValidas_RetornaFallo()
         {
             var dto = new GenerarOrdenamientoDto

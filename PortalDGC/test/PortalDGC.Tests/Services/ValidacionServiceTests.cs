@@ -95,6 +95,18 @@ namespace PortalDGC.Tests.Services
         }
 
         [Fact]
+        public void ValidarFechaRango_FechaEnLimiteSuperior_RetornaTrue()
+        {
+            var fechaInicio = DateTime.Today.AddDays(-5);
+            var fechaFin = DateTime.Today;
+
+            var resultado = _sut.ValidarFechaRango(fechaFin, fechaInicio, fechaFin);
+
+            Assert.True(resultado.Success);
+            Assert.True(resultado.Data);
+        }
+
+        [Fact]
         public void ValidarFechaRango_FueraDelRango_RetornaFalse()
         {
             var fecha = DateTime.Now.AddDays(-20);
