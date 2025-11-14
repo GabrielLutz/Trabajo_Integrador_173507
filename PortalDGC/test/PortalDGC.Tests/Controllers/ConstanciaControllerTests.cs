@@ -168,7 +168,8 @@ namespace PortalDGC.Tests.Controllers
             var result = await _controller.SubirConstancia(2, new SubirConstanciaDto());
 
             var badRequest = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Same(_controller.ModelState, badRequest.Value);
+            var serializable = Assert.IsType<SerializableError>(badRequest.Value);
+            Assert.True(serializable.ContainsKey("Nombre"));
             _serviceMock.Verify(s => s.SubirConstanciaAsync(It.IsAny<int>(), It.IsAny<SubirConstanciaDto>()), Times.Never);
         }
     }

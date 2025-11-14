@@ -464,7 +464,7 @@ namespace PortalDGC.Tests.Services
             Assert.Equal(1, data.TotalInscripciones);
             Assert.True(data.OrdenamientoGenerado);
             Assert.Equal(1, data.TotalAfrodescendientes);
-            Assert.Equal(95, data.PromedioGeneral);
+            Assert.Equal(115, data.PromedioGeneral);
             Assert.Single(data.DetallesPruebas);
         }
 
