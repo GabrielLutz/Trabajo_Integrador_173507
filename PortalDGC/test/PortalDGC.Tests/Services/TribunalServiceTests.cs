@@ -500,6 +500,66 @@ namespace PortalDGC.Tests.Services
         }
 
         [Fact]
+        public async Task GenerarOrdenamientoAsync_InscripcionesValidas_GeneraOrdenamiento()
+        {
+            var dto = new GenerarOrdenamientoDto
+            {
+                LlamadoId = 4,
+                PuntajeMinimoAprobacion = 60,
+                EsDefinitivo = false,
+                AplicarCuotas = false
+            };
+
+            var llamado = new Llamado { Id = dto.LlamadoId, CantidadPuestos = 2 };
+            _llamadosMock.Setup(r => r.GetByIdWithDetallesAsync(dto.LlamadoId)).ReturnsAsync(llamado);
+
+            var inscripcion = CrearInscripcion();
+            inscripcion.LlamadoId = dto.LlamadoId;
+            _inscripcionesMock.Setup(r => r.GetByLlamadoIdAsync(dto.LlamadoId)).ReturnsAsync(new List<Inscripcion> { inscripcion });
+
+            _evaluacionesPruebasMock
+                .Setup(r => r.GetByInscripcionIdAsync(inscripcion.Id))
+                .ReturnsAsync(new List<EvaluacionPrueba>
+                {
+                    new EvaluacionPrueba { Verificado = true, Aprobado = true, PuntajeObtenido = 50 }
+                });
+
+            _evaluacionesMeritosMock
+                .Setup(r => r.GetByInscripcionIdAsync(inscripcion.Id))
+                .ReturnsAsync(new List<EvaluacionMerito>
+                {
+                    new EvaluacionMerito { Estado = "Aprobado", PuntajeAsignado = 20 }
+                });
+
+            _meritosMock.Setup(r => r.GetByInscripcionIdAsync(inscripcion.Id)).ReturnsAsync(new List<MeritoPostulante>());
+
+            _ordenamientosMock
+                .Setup(r => r.AddAsync(It.IsAny<Ordenamiento>()))
+                .ReturnsAsync((Ordenamiento o) =>
+                {
+                    o.Id = 88;
+                    return o;
+                });
+
+            _posicionesMock
+                .Setup(r => r.AddRangeAsync(It.IsAny<IEnumerable<PosicionOrdenamiento>>()))
+                .Returns(Task.CompletedTask);
+
+            _unitOfWorkMock.Setup(u => u.SaveChangesAsync()).ReturnsAsync(1);
+            _ordenamientosMock.Setup(r => r.GetByLlamadoIdAsync(dto.LlamadoId)).ReturnsAsync(new List<Ordenamiento>());
+
+            var resultado = await _sut.GenerarOrdenamientoAsync(dto);
+
+            Assert.True(resultado.Success);
+            var data = AssertNotNull(resultado.Data);
+            Assert.Single(data.OrdenamientosGenerados);
+            Assert.Equal("General", data.OrdenamientosGenerados[0].Tipo);
+            _unitOfWorkMock.Verify(u => u.CommitTransactionAsync(), Times.Once);
+            _ordenamientosMock.Verify(r => r.AddAsync(It.IsAny<Ordenamiento>()), Times.Once);
+            _posicionesMock.Verify(r => r.AddRangeAsync(It.Is<IEnumerable<PosicionOrdenamiento>>(p => p.Count() == 1)), Times.Once);
+        }
+
+        [Fact]
         public async Task PublicarOrdenamientoAsync_NoExiste_RetornaFallo()
         {
             _ordenamientosMock
