@@ -11,10 +11,18 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.DataAccess.UnitOfWork
 {
+    /// <summary>
+    /// Implementación concreta de <see cref="IUnitOfWork"/> basada en <see cref="ApplicationDbContext"/>,
+    /// encargada de orquestar repositorios y transacciones para los procesos RF-01 a RF-20.
+    /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
         private IDbContextTransaction? _transaction;
+        /// <summary>
+        /// Construye la unidad de trabajo inicializando cada repositorio especializado.
+        /// </summary>
+        /// <param name="context">Contexto EF Core compartido.</param>
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
@@ -55,10 +63,12 @@ namespace PortalDGC.DataAccess.UnitOfWork
         public IOrdenamientoRepository Ordenamientos { get; private set; }
         public IPosicionOrdenamientoRepository PosicionesOrdenamiento { get; private set; }
 
+        /// <inheritdoc />
         public async Task BeginTransactionAsync()
         {
             _transaction = await _context.Database.BeginTransactionAsync();
         }
+        /// <inheritdoc />
         public async Task CommitTransactionAsync()
         {
             try
@@ -83,11 +93,13 @@ namespace PortalDGC.DataAccess.UnitOfWork
                 }
             }
         }
+        /// <inheritdoc />
         public void Dispose()
         {
             _transaction?.Dispose();
             _context.Dispose();
         }
+        /// <inheritdoc />
         public async Task RollbackTransactionAsync()
         {
             if (_transaction != null)
@@ -97,6 +109,7 @@ namespace PortalDGC.DataAccess.UnitOfWork
                 _transaction = null;
             }
         }
+        /// <inheritdoc />
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();

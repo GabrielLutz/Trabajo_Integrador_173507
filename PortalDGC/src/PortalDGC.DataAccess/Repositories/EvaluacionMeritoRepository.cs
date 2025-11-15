@@ -10,12 +10,16 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.DataAccess.Repositories
 {
+    /// <summary>
+    /// Repositorio que almacena las evaluaciones de méritos realizadas por el tribunal (RF-14).
+    /// </summary>
     public class EvaluacionMeritoRepository : Repository<EvaluacionMerito>, IEvaluacionMeritoRepository
     {
         public EvaluacionMeritoRepository(ApplicationDbContext context) : base(context)
         {
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<EvaluacionMerito>> GetByInscripcionIdAsync(int inscripcionId)
         {
             return await _dbSet
@@ -25,6 +29,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .ToListAsync();
         }
 
+            /// <inheritdoc />
         public async Task<EvaluacionMerito?> GetByMeritoIdAsync(int meritoPostulanteId)
         {
             return await _dbSet
@@ -33,6 +38,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .FirstOrDefaultAsync(e => e.MeritoPostulanteId == meritoPostulanteId);
         }
 
+            /// <inheritdoc />
         public async Task<decimal> GetPuntajeTotalMeritosAsync(int inscripcionId)
         {
             var evaluaciones = await _dbSet

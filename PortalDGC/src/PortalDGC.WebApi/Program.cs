@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.IO;
+using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using PortalDGC.BusinessLogic.Interfaces;
 using PortalDGC.BusinessLogic.Services;
@@ -22,6 +24,22 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "API para gestión de inscripciones de postulantes"
     });
+
+    // Incluir documentación XML tanto del WebApi como de BusinessLogic
+    var xmlDocuments = new[]
+    {
+        $"{Assembly.GetExecutingAssembly().GetName().Name}.xml",
+        "PortalDGC.BusinessLogic.xml"
+    };
+
+    foreach (var xml in xmlDocuments)
+    {
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xml);
+        if (File.Exists(xmlPath))
+        {
+            c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+        }
+    }
 });
 
 builder.Services.AddControllers();

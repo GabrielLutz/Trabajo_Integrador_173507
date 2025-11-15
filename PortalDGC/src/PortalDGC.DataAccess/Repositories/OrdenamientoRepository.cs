@@ -10,12 +10,16 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.DataAccess.Repositories
 {
+    /// <summary>
+    /// Repositorio que gestiona los ordenamientos (listados finales) generados por el tribunal.
+    /// </summary>
     public class OrdenamientoRepository : Repository<Ordenamiento>, IOrdenamientoRepository
     {
         public OrdenamientoRepository(ApplicationDbContext context) : base(context)
         {
         }
 
+        /// <inheritdoc />
         public async Task<Ordenamiento?> GetByIdWithPosicionesAsync(int id)
         {
             return await _dbSet
@@ -33,6 +37,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .FirstOrDefaultAsync(o => o.Id == id);
         }
 
+            /// <inheritdoc />
         public async Task<IEnumerable<Ordenamiento>> GetByLlamadoIdAsync(int llamadoId)
         {
             return await _dbSet
@@ -43,6 +48,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .ToListAsync();
         }
 
+            /// <inheritdoc />
         public async Task<Ordenamiento?> GetDefinitivoByLlamadoAndTipoAsync(int llamadoId, string tipo)
         {
             return await _dbSet

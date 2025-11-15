@@ -10,12 +10,16 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.DataAccess.Repositories
 {
+    /// <summary>
+    /// Repositorio que almacena las evaluaciones de pruebas escritas/orales del tribunal.
+    /// </summary>
     public class EvaluacionPruebaRepository : Repository<EvaluacionPrueba>, IEvaluacionPruebaRepository
     {
         public EvaluacionPruebaRepository(ApplicationDbContext context) : base(context)
         {
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<EvaluacionPrueba>> GetByInscripcionIdAsync(int inscripcionId)
         {
             return await _dbSet
@@ -25,6 +29,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .ToListAsync();
         }
 
+            /// <inheritdoc />
         public async Task<IEnumerable<EvaluacionPrueba>> GetByPruebaIdAsync(int pruebaId)
         {
             return await _dbSet
@@ -35,6 +40,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .ToListAsync();
         }
 
+            /// <inheritdoc />
         public async Task<EvaluacionPrueba?> GetByInscripcionAndPruebaAsync(int inscripcionId, int pruebaId)
         {
             return await _dbSet
@@ -43,6 +49,7 @@ namespace PortalDGC.DataAccess.Repositories
                                          e.PruebaId == pruebaId);
         }
 
+        /// <inheritdoc />
         public async Task<decimal> GetPromedioByPruebaAsync(int pruebaId)
         {
             var evaluaciones = await _dbSet
@@ -57,6 +64,7 @@ namespace PortalDGC.DataAccess.Repositories
             return evaluaciones.Average(e => e.PuntajeObtenido);
         }
 
+        /// <inheritdoc />
         public async Task<int> GetCantidadAprobadosAsync(int pruebaId)
         {
             return await _dbSet

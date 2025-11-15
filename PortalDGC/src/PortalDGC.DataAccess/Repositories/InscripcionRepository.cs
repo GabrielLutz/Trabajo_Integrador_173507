@@ -10,11 +10,15 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.DataAccess.Repositories
 {
+    /// <summary>
+    /// Repositorio de inscripciones encargado de componer todo el agregado (RF-05, RF-07, RF-08).
+    /// </summary>
     public class InscripcionRepository : Repository<Inscripcion>, IInscripcionRepository
     {
         public InscripcionRepository(ApplicationDbContext context) : base(context)
         {
         }
+        /// <inheritdoc />
         public async Task<Inscripcion?> GetByIdCompleteAsync(int id)
         {
             return await _dbSet
@@ -30,6 +34,7 @@ namespace PortalDGC.DataAccess.Repositories
                     .ThenInclude(ap => ap.Apoyo)
                 .FirstOrDefaultAsync(i => i.Id == id);
         }
+            /// <inheritdoc />
         public async Task<IEnumerable<Inscripcion>> GetByPostulanteIdAsync(int postulanteId)
         {
             return await _dbSet
@@ -39,6 +44,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .OrderByDescending(i => i.FechaInscripcion)
                 .ToListAsync();
         }
+            /// <inheritdoc />
         public async Task<IEnumerable<Inscripcion>> GetByLlamadoIdAsync(int llamadoId)
         {
             return await _dbSet
@@ -48,16 +54,19 @@ namespace PortalDGC.DataAccess.Repositories
                 .Where(i => i.LlamadoId == llamadoId)
                 .ToListAsync();
         }
+        /// <inheritdoc />
         public async Task<bool> ExistsInscripcionAsync(int postulanteId, int llamadoId)
         {
             return await _dbSet
                 .AnyAsync(i => i.PostulanteId == postulanteId && i.LlamadoId == llamadoId);
         }
+        /// <inheritdoc />
         public async Task<Inscripcion> CreateInscripcionCompleteAsync(Inscripcion inscripcion)
         {
             await _dbSet.AddAsync(inscripcion);
             return inscripcion;
         }
+        /// <inheritdoc />
         public async Task UpdateEstadoAsync(int inscripcionId, string estado)
         {
             var inscripcion = await GetByIdAsync(inscripcionId);
@@ -66,6 +75,7 @@ namespace PortalDGC.DataAccess.Repositories
                 inscripcion.Estado = estado;
             }
         }
+        /// <inheritdoc />
         public async Task UpdatePuntajeTotalAsync(int inscripcionId, decimal puntaje)
         {
             var inscripcion = await GetByIdAsync(inscripcionId);

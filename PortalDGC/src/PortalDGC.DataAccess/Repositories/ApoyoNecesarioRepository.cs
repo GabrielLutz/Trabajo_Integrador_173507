@@ -10,11 +10,15 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.DataAccess.Repositories
 {
+    /// <summary>
+    /// Repositorio de apoyos ofrecidos por la Udelar en cada llamado para garantizar accesibilidad.
+    /// </summary>
     public class ApoyoNecesarioRepository : Repository<ApoyoNecesario>, IApoyoNecesarioRepository
     {
         public ApoyoNecesarioRepository(ApplicationDbContext context) : base(context)
         {
         }
+        /// <inheritdoc />
         public async Task<IEnumerable<ApoyoNecesario>> GetByLlamadoIdAsync(int llamadoId)
         {
             return await _dbSet
@@ -22,6 +26,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .OrderBy(a => a.Tipo)
                 .ToListAsync();
         }
+        /// <inheritdoc />
         public override async Task<ApoyoNecesario?> GetByIdAsync(int apoyoId)
         {
             return await _dbSet

@@ -11,17 +11,43 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.BusinessLogic.Services
 {
+    /// <summary>
+    /// Servicio de negocio para la gestión de constancias y documentación respaldatoria.
+    /// Implementa el requerimiento RF-06 (gestión de constancias del postulante).
+    /// </summary>
     public class ConstanciaService : IConstanciaService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IArchivoService _archivoService;
 
+        /// <summary>
+        /// Inicializa una nueva instancia del servicio de constancias.
+        /// </summary>
+        /// <param name="unitOfWork">Unidad de trabajo para operaciones transaccionales</param>
+        /// <param name="archivoService">Servicio encargado del almacenamiento de archivos</param>
         public ConstanciaService(IUnitOfWork unitOfWork, IArchivoService archivoService)
         {
             _unitOfWork = unitOfWork;
             _archivoService = archivoService;
         }
 
+        /// <summary>
+        /// Sube una constancia digital del postulante validando formato y persistiendo el archivo.
+        /// Implementa RF-06: carga de constancias en formato PDF o imagen.
+        /// </summary>
+        /// <param name="postulanteId">Identificador del postulante propietario de la constancia</param>
+        /// <param name="constanciaDto">DTO con nombre de archivo, tipo y contenido binario</param>
+        /// <returns>
+        /// ApiResponseDto con ConstanciaResponseDto recién creada, incluyendo metadata almacenada.
+        /// Success = false cuando:
+        /// - El postulante no existe
+        /// - El archivo no tiene uno de los formatos permitidos (.pdf, .jpg, .jpeg, .png)
+        /// </returns>
+        /// <exception cref="Exception">Propaga errores generados durante la transacción de guardado</exception>
+        /// <remarks>
+        /// El archivo se valida mediante IArchivoService.ValidarTipoArchivo y luego se almacena
+        /// junto con su metadata. El campo Validado se inicializa en false hasta revisión manual.
+        /// </remarks>
         public async Task<ApiResponseDto<ConstanciaResponseDto>> SubirConstanciaAsync(
             int postulanteId,
             SubirConstanciaDto constanciaDto)
@@ -93,6 +119,15 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Obtiene el listado de constancias cargadas por un postulante específico.
+        /// Implementa RF-06: consulta de constancias existentes del postulante.
+        /// </summary>
+        /// <param name="postulanteId">Identificador del postulante</param>
+        /// <returns>
+        /// ApiResponseDto con lista de ConstanciaResponseDto (nombre, tipo, fecha, estado de validación).
+        /// </returns>
+        /// <exception cref="Exception">Cuando ocurre un error al consultar la base de datos</exception>
         public async Task<ApiResponseDto<List<ConstanciaResponseDto>>> ObtenerConstanciasPorPostulanteAsync(int postulanteId)
         {
             try
@@ -127,6 +162,13 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Obtiene una constancia específica por su identificador.
+        /// </summary>
+        /// <param name="constanciaId">Identificador único de la constancia</param>
+        /// <returns>
+        /// ApiResponseDto con la constancia solicitada o mensaje de no encontrada.
+        /// </returns>
         public async Task<ApiResponseDto<ConstanciaResponseDto>> ObtenerConstanciaPorIdAsync(int constanciaId)
         {
             try
@@ -170,6 +212,11 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Marca una constancia como validada dentro del proceso administrativo.
+        /// </summary>
+        /// <param name="constanciaId">Identificador de la constancia</param>
+        /// <returns>ApiResponseDto indicando si la validación se realizó exitosamente.</returns>
         public async Task<ApiResponseDto<bool>> ValidarConstanciaAsync(int constanciaId)
         {
             try
@@ -205,6 +252,11 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Descarga el contenido binario de una constancia almacenada.
+        /// </summary>
+        /// <param name="constanciaId">Identificador de la constancia a descargar</param>
+        /// <returns>ApiResponseDto con los bytes del archivo o error si no existe.</returns>
         public async Task<ApiResponseDto<byte[]>> DescargarConstanciaAsync(int constanciaId)
         {
             try

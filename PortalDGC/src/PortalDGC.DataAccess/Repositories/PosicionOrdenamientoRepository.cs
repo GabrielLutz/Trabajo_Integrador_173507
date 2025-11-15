@@ -10,12 +10,16 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.DataAccess.Repositories
 {
+    /// <summary>
+    /// Operaciones de persistencia para posiciones de ordenamiento (RF-15).
+    /// </summary>
     public class PosicionOrdenamientoRepository : Repository<PosicionOrdenamiento>, IPosicionOrdenamientoRepository
     {
         public PosicionOrdenamientoRepository(ApplicationDbContext context) : base(context)
         {
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<PosicionOrdenamiento>> GetByOrdenamientoIdAsync(int ordenamientoId)
         {
             return await _dbSet
@@ -30,6 +34,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .ToListAsync();
         }
 
+        /// <inheritdoc />
         public async Task AddRangeAsync(IEnumerable<PosicionOrdenamiento> posiciones)
         {
             await _dbSet.AddRangeAsync(posiciones);
