@@ -8,10 +8,14 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.BusinessLogic.Services
 {
+    /// <summary>
+    /// Implementación de <see cref="IArchivoService"/> para gestionar archivos en disco.
+    /// </summary>
     public class ArchivoService : IArchivoService
     {
         private readonly string _rutaBase = "Archivos"; 
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<string>> GuardarArchivoAsync(byte[] contenido, string nombreArchivo, string carpeta)
         {
             try
@@ -44,6 +48,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<byte[]>> ObtenerArchivoAsync(string rutaArchivo)
         {
             try
@@ -77,6 +82,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<bool>> EliminarArchivoAsync(string rutaArchivo)
         {
             try
@@ -104,6 +110,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public ApiResponseDto<bool> ValidarTipoArchivo(string nombreArchivo, List<string> extensionesPermitidas)
         {
             var extension = Path.GetExtension(nombreArchivo).ToLower();
@@ -118,6 +125,7 @@ namespace PortalDGC.BusinessLogic.Services
             };
         }
 
+        /// <inheritdoc />
         public ApiResponseDto<bool> ValidarTamañoArchivo(long tamaño, long tamañoMaximoMB = 10)
         {
             var tamañoMaximoBytes = tamañoMaximoMB * 1024 * 1024;
@@ -132,6 +140,7 @@ namespace PortalDGC.BusinessLogic.Services
             };
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<string>> ConvertirBase64AArchivoAsync(string base64, string nombreArchivo, string carpeta)
         {
             try

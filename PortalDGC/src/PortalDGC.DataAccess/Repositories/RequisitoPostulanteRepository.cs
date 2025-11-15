@@ -10,11 +10,15 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.DataAccess.Repositories
 {
+    /// <summary>
+    /// Repositorio que registra los requisitos presentados por cada postulante.
+    /// </summary>
     public class RequisitoPostulanteRepository : Repository<RequisitoPostulante>, IRequisitoPostulanteRepository
     {
         public RequisitoPostulanteRepository(ApplicationDbContext context) : base(context)
         {
         }
+        /// <inheritdoc />
         public async Task<IEnumerable<RequisitoPostulante>> GetByInscripcionIdAsync(int inscripcionId)
         {
             return await _dbSet
@@ -22,15 +26,18 @@ namespace PortalDGC.DataAccess.Repositories
                 .Where(rp => rp.InscripcionId == inscripcionId)
                 .ToListAsync();
         }
+        /// <inheritdoc />
         public async Task<RequisitoPostulante> AddRequisitoAsync(RequisitoPostulante requisito)
         {
             await _dbSet.AddAsync(requisito);
             return requisito;
         }
+        /// <inheritdoc />
         public async Task AddRangeAsync(IEnumerable<RequisitoPostulante> requisitos)
         {
             await _dbSet.AddRangeAsync(requisitos);
         }
+        /// <inheritdoc />
         public async Task<bool> CumpleTodosRequisitosObligatorios(int inscripcionId)
         {
             var requisitosObligatorios = await _dbSet

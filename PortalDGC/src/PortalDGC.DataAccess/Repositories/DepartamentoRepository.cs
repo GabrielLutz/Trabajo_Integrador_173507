@@ -10,18 +10,23 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.DataAccess.Repositories
 {
+    /// <summary>
+    /// Repositorio de departamentos orientado a validar disponibilidad por llamado (RF-03).
+    /// </summary>
     public class DepartamentoRepository : Repository<Departamento>, IDepartamentoRepository
     {
         public DepartamentoRepository(ApplicationDbContext context) : base(context)
         {
         }
 
+        /// <inheritdoc />
         public async Task<bool> ExistsInLlamado(int departamentoId, int llamadoId)
         {
             return await _context.LlamadoDepartamentos
                 .AnyAsync(ld => ld.DepartamentoId == departamentoId && ld.LlamadoId == llamadoId);
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Departamento>> GetActivosAsync()
         {
             return await _dbSet
@@ -30,6 +35,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .ToListAsync();
         }
 
+        /// <inheritdoc />
         public async Task<Departamento?> GetByCodigoAsync(string codigo)
         {
             return await _dbSet

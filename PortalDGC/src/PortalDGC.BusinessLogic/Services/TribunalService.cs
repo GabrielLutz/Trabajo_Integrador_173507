@@ -12,15 +12,34 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.BusinessLogic.Services
 {
+    /// <summary>
+    /// Servicio de negocio para operaciones del tribunal evaluador.
+    /// Implementa los requerimientos RF-11 (gestión de evaluaciones),
+    /// RF-12 (registro de pruebas), RF-14 (valoración de méritos) y RF-15 (ordenamientos).
+    /// </summary>
     public class TribunalService : ITribunalService
     {
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Inicializa el servicio de tribunal con la unidad de trabajo provista.
+        /// </summary>
+        /// <param name="unitOfWork">Unidad de trabajo para repositorios transaccionales</param>
         public TribunalService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Obtiene las inscripciones de un llamado junto con su estado de evaluación.
+        /// Implementa RF-11: gestionar las inscripciones que deben ser evaluadas por el tribunal.
+        /// </summary>
+        /// <param name="llamadoId">Identificador del llamado a evaluar</param>
+        /// <returns>
+        /// ApiResponseDto con lista de InscripcionParaEvaluarDto que detalla puntajes parciales,
+        /// cantidad de pruebas/meritos evaluados, indicadores de cupos de autodefinición, etc.
+        /// </returns>
+        /// <exception cref="Exception">Cuando ocurre un error al consultar datos relacionados</exception>
         public async Task<ApiResponseDto<List<InscripcionParaEvaluarDto>>> ObtenerInscripcionesParaEvaluarAsync(int llamadoId)
         {
             try
@@ -83,6 +102,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<DetalleEvaluacionDto>> ObtenerDetalleEvaluacionAsync(int inscripcionId)
         {
             try
@@ -173,6 +193,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<List<PruebaDto>>> ObtenerPruebasDelLlamadoAsync(int llamadoId)
         {
             try
@@ -221,6 +242,16 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Registra o actualiza la calificación de una prueba rendida por una inscripción.
+        /// Implementa RF-12: evaluación de pruebas con puntuación entre 0 y el máximo definido.
+        /// </summary>
+        /// <param name="dto">DTO con identificadores de inscripción/prueba y puntaje obtenido</param>
+        /// <returns>
+        /// ApiResponseDto con EvaluacionPruebaDto actualizado, incluyendo datos de la prueba, puntaje y estado.
+        /// Success = false si la prueba no existe o el puntaje está fuera del rango permitido.
+        /// </returns>
+        /// <exception cref="Exception">Cuando ocurre un error el registro se revierte (rollback)</exception>
         public async Task<ApiResponseDto<EvaluacionPruebaDto>> CalificarPruebaAsync(CalificarPruebaDto dto)
         {
             try
@@ -313,6 +344,16 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Valora un mérito individual asignando puntaje y estado según la documentación.
+        /// Implementa RF-14: valoración de méritos de postulantes.
+        /// </summary>
+        /// <param name="dto">DTO con identificador del mérito y datos de valoración</param>
+        /// <returns>
+        /// ApiResponseDto con EvaluacionMeritoDto resultante, incluyendo puntaje asignado y observaciones.
+        /// Success = false cuando el mérito o item puntuable no existen o el puntaje excede el máximo.
+        /// </returns>
+        /// <exception cref="Exception">Se revierte la transacción ante cualquier error</exception>
         public async Task<ApiResponseDto<EvaluacionMeritoDto>> ValorarMeritoAsync(ValorarMeritoDto dto)
         {
             try
@@ -412,6 +453,14 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Valora en lote múltiples méritos asociados a una inscripción.
+        /// </summary>
+        /// <param name="inscripcionId">Identificador de la inscripción evaluada.</param>
+        /// <param name="meritos">Listado de méritos a valorar con sus puntajes.</param>
+        /// <returns>
+        /// ApiResponseDto con la colección de evaluaciones registradas exitosamente.
+        /// </returns>
         public async Task<ApiResponseDto<List<EvaluacionMeritoDto>>> ValorarMeritosAsync(int inscripcionId, List<ValorarMeritoDto> meritos)
         {
             try
@@ -503,6 +552,16 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Genera los ordenamientos (listas de prelación) de un llamado aplicando reglas de desempate y cuotas.
+        /// Implementa RF-15: generación de ordenamientos preliminares/definitivos.
+        /// </summary>
+        /// <param name="dto">DTO con parámetros de generación (llamado, puntaje mínimo, cuotas, etc.)</param>
+        /// <returns>
+        /// ApiResponseDto con ResultadoGeneracionOrdenamientoDto que incluye las listas generadas y estadísticas.
+        /// Success = false si no existen inscripciones que cumplan requisitos o el llamado no existe.
+        /// </returns>
+        /// <exception cref="Exception">Rollback de la transacción ante fallos</exception>
         public async Task<ApiResponseDto<ResultadoGeneracionOrdenamientoDto>> GenerarOrdenamientoAsync(GenerarOrdenamientoDto dto)
         {
             try
@@ -670,6 +729,13 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Obtiene todas las listas de ordenamiento generadas para un llamado determinado.
+        /// </summary>
+        /// <param name="llamadoId">Identificador del llamado.</param>
+        /// <returns>
+        /// ApiResponseDto con el resumen de ordenamientos (tipo, estado y cantidad de posiciones).
+        /// </returns>
         public async Task<ApiResponseDto<List<OrdenamientoDto>>> ObtenerOrdenamientosAsync(int llamadoId)
         {
             try
@@ -713,6 +779,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<OrdenamientoDetalleDto>> ObtenerDetalleOrdenamientoAsync(int ordenamientoId)
         {
             try
@@ -777,6 +844,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<bool>> PublicarOrdenamientoAsync(int ordenamientoId)
         {
             try
@@ -813,6 +881,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<EstadisticasTribunalDto>> ObtenerEstadisticasAsync(int llamadoId)
         {
             try

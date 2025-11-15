@@ -10,15 +10,29 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.BusinessLogic.Services
 {
+    /// <summary>
+    /// Servicio para consultar departamentos disponibles en los llamados (RF-03).
+    /// </summary>
     public class DepartamentoService : IDepartamentoService
     {
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Inicializa el servicio de departamentos.
+        /// </summary>
+        /// <param name="unitOfWork">Unidad de trabajo para acceso a repositorios</param>
         public DepartamentoService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Obtiene los departamentos activos habilitados para inscripciones.
+        /// Implementa RF-03 (visualización de llamados con sus departamentos).
+        /// </summary>
+        /// <returns>
+        /// Respuesta con la lista de departamentos activos.
+        /// </returns>
         public async Task<ApiResponseDto<List<DepartamentoDto>>> ObtenerDepartamentosActivosAsync()
         {
             try
@@ -50,6 +64,13 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Obtiene la información de un departamento por su ID.
+        /// </summary>
+        /// <param name="departamentoId">Identificador del departamento.</param>
+        /// <returns>
+        /// Respuesta con los datos del departamento o error si no existe.
+        /// </returns>
         public async Task<ApiResponseDto<DepartamentoDto>> ObtenerDepartamentoPorIdAsync(int departamentoId)
         {
             try
@@ -90,6 +111,13 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Obtiene los departamentos asociados a un llamado específico.
+        /// </summary>
+        /// <param name="llamadoId">Identificador del llamado.</param>
+        /// <returns>
+        /// Respuesta con la lista de departamentos vinculados al llamado.
+        /// </returns>
         public async Task<ApiResponseDto<List<DepartamentoLlamadoDto>>> ObtenerDepartamentosPorLlamadoAsync(int llamadoId)
         {
             try
@@ -131,6 +159,14 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Valida si un departamento pertenece a un llamado.
+        /// </summary>
+        /// <param name="departamentoId">Identificador del departamento.</param>
+        /// <param name="llamadoId">Identificador del llamado.</param>
+        /// <returns>
+        /// Respuesta que indica si la combinación es válida.
+        /// </returns>
         public async Task<ApiResponseDto<bool>> ValidarDepartamentoEnLlamadoAsync(int departamentoId, int llamadoId)
         {
             try

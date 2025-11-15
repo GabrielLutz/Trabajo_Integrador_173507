@@ -10,12 +10,17 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.DataAccess.Repositories
 {
+    /// <summary>
+    /// Repositorio concreto de llamados para RF-03/RF-04.
+    /// Expone consultas enriquecidas con relaciones necesarias para armado de inscripciones.
+    /// </summary>
     public class LlamadoRepository : Repository<Llamado>, ILlamadoRepository
     {
         public LlamadoRepository(ApplicationDbContext context) : base(context)
         {
         }
 
+        /// <inheritdoc />
         public async Task<Llamado?> GetByIdWithApoyosAsync(int id)
         {
             return await _dbSet
@@ -23,6 +28,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .FirstOrDefaultAsync(l => l.Id == id);
         }
 
+        /// <inheritdoc />
         public async Task<Llamado?> GetByIdWithDepartamentosAsync(int id)
         {
             return await _dbSet
@@ -31,6 +37,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .FirstOrDefaultAsync(l => l.Id == id);
         }
 
+            /// <inheritdoc />
         public async Task<Llamado?> GetByIdWithDetallesAsync(int id)
         {
             return await _dbSet
@@ -42,6 +49,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .FirstOrDefaultAsync(l => l.Id == id);
         }
 
+        /// <inheritdoc />
         public async Task<Llamado?> GetByIdWithItemsPuntuablesAsync(int id)
         {
             return await _dbSet
@@ -49,6 +57,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .FirstOrDefaultAsync(l => l.Id == id);
         }
 
+        /// <inheritdoc />
         public async Task<Llamado?> GetByIdWithRequisitosAsync(int id)
         {
             return await _dbSet
@@ -56,6 +65,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .FirstOrDefaultAsync(l => l.Id == id);
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Llamado>> GetLlamadosActivosAsync()
         {
             return await _dbSet
@@ -64,6 +74,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .ToListAsync();
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Llamado>> GetLlamadosInactivosAsync()
         {
             return await _context.Llamados
@@ -72,6 +83,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .ToListAsync();
         }
 
+            /// <inheritdoc />
         public async Task<bool> IsLlamadoAbierto(int llamadoId)
         {
             return await _dbSet

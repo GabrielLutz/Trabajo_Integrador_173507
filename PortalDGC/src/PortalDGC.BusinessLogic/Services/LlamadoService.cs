@@ -10,15 +10,46 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.BusinessLogic.Services
 {
+    /// <summary>
+    /// Servicio de negocio para gestión de llamados públicos.
+    /// Implementa requerimientos funcionales RF-03 y RF-04.
+    /// </summary>
     public class LlamadoService : ILlamadoService
     {
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Constructor del servicio de llamados.
+        /// </summary>
+        /// <param name="unitOfWork">Unidad de trabajo para acceso a datos</param>
         public LlamadoService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Obtiene el detalle completo de un llamado específico con toda su información.
+        /// Implementa RF-04: Consulta de detalle de llamado.
+        /// </summary>
+        /// <param name="llamadoId">Identificador único del llamado</param>
+        /// <returns>
+        /// ApiResponseDto con LlamadoDetalleDto que incluye:
+        /// - Información básica del llamado (título, descripción, bases)
+        /// - Fechas de apertura y cierre
+        /// - Cantidad de puestos y estado
+        /// - Lista de departamentos con cantidad de puestos por departamento
+        /// - Lista completa de requisitos excluyentes (obligatorios y opcionales)
+        /// - Lista de ítems puntuables con puntajes máximos y categorías
+        /// - Lista de apoyos necesarios disponibles
+        /// Success = false si el llamado no existe
+        /// </returns>
+        /// <exception cref="Exception">Cuando ocurre un error en la consulta</exception>
+        /// <remarks>
+        /// Este método carga todos los datos relacionados necesarios para:
+        /// - Visualizar el llamado completo para postulantes
+        /// - Permitir al postulante conocer requisitos y evaluaciones
+        /// - Facilitar el proceso de inscripción informada
+        /// </remarks>
         public async Task<ApiResponseDto<LlamadoDetalleDto>> ObtenerLlamadoPorIdAsync(int llamadoId)
         {
             try
@@ -92,6 +123,24 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Obtiene la lista de llamados vigentes y disponibles para inscripción.
+        /// Implementa RF-03: Visualización de llamados vigentes.
+        /// </summary>
+        /// <returns>
+        /// ApiResponseDto con lista de LlamadoSimpleDto que incluye:
+        /// - ID, título y descripción del llamado
+        /// - Fechas de apertura y cierre
+        /// - Estado actual (debería ser "Abierto")
+        /// </returns>
+        /// <exception cref="Exception">Cuando ocurre un error en la consulta</exception>
+        /// <remarks>
+        /// Los llamados activos son aquellos que:
+        /// - Están en estado "Abierto"
+        /// - La fecha actual está entre la fecha de apertura y cierre
+        /// Este método retorna una vista simplificada.
+        /// Para ver detalles completos usar ObtenerLlamadoPorIdAsync.
+        /// </remarks>
         public async Task<ApiResponseDto<List<LlamadoSimpleDto>>> ObtenerLlamadosActivosAsync()
         {
             try
@@ -126,6 +175,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<List<LlamadoSimpleDto>>> ObtenerLlamadosInactivosAsync()
         {
             try
@@ -159,6 +209,8 @@ namespace PortalDGC.BusinessLogic.Services
                 };
             }
         }
+
+        /// <inheritdoc />
         public async Task<ApiResponseDto<bool>> ValidarLlamadoDisponibleAsync(int llamadoId)
         {
             try
@@ -183,6 +235,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<List<RequisitoExcluyenteDto>>> ObtenerRequisitosLlamadoAsync(int llamadoId)
         {
             try
@@ -215,6 +268,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<List<ItemPuntuableDto>>> ObtenerItemsPuntuablesLlamadoAsync(int llamadoId)
         {
             try
@@ -248,6 +302,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<List<ApoyoNecesarioDto>>> ObtenerApoyosNecesariosLlamadoAsync(int llamadoId)
         {
             try

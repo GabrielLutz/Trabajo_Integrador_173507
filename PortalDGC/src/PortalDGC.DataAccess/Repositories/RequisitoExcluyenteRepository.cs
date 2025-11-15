@@ -10,11 +10,15 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.DataAccess.Repositories
 {
+    /// <summary>
+    /// Repositorio encargado de los requisitos excluyentes asociados a cada llamado.
+    /// </summary>
     public class RequisitoExcluyenteRepository : Repository<RequisitoExcluyente>, IRequisitoExcluyenteRepository
     {
         public RequisitoExcluyenteRepository(ApplicationDbContext context) : base(context)
         {
         }
+        /// <inheritdoc />
         public async Task<IEnumerable<RequisitoExcluyente>> GetByLlamadoIdAsync(int llamadoId)
         {
             return await _dbSet
@@ -22,6 +26,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .OrderBy(r => r.Tipo)
                 .ToListAsync();
         }
+        /// <inheritdoc />
         public override async Task<RequisitoExcluyente?> GetByIdAsync(int requisitoId)
         {
             return await _dbSet

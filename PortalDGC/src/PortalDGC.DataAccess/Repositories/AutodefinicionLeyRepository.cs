@@ -10,16 +10,21 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.DataAccess.Repositories
 {
+    /// <summary>
+    /// Repositorio que persiste la autodefinición Ley 19.122 asociada a cada inscripción.
+    /// </summary>
     public class AutodefinicionLeyRepository : Repository<AutodefinicionLey>, IAutodefinicionLeyRepository
     {
         public AutodefinicionLeyRepository(ApplicationDbContext context) : base(context)
         {
         }
+        /// <inheritdoc />
         public async Task<AutodefinicionLey?> GetByInscripcionIdAsync(int inscripcionId)
         {
             return await _dbSet
                 .FirstOrDefaultAsync(a => a.InscripcionId == inscripcionId);
         }
+        /// <inheritdoc />
         public async Task<AutodefinicionLey> CreateOrUpdateAsync(AutodefinicionLey autodefinicion)
         {
             var existing = await GetByInscripcionIdAsync(autodefinicion.InscripcionId);

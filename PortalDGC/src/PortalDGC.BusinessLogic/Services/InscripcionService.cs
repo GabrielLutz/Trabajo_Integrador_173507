@@ -11,17 +11,55 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.BusinessLogic.Services
 {
+    /// <summary>
+    /// Servicio de negocio para gestión de inscripciones de postulantes a llamados.
+    /// Implementa requerimientos funcionales RF-05, RF-07 y RF-08.
+    /// </summary>
     public class InscripcionService : IInscripcionService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidacionService _validacionService;
 
+        /// <summary>
+        /// Constructor del servicio de inscripciones.
+        /// </summary>
+        /// <param name="unitOfWork">Unidad de trabajo para acceso a datos</param>
+        /// <param name="validacionService">Servicio de validaciones de negocio</param>
         public InscripcionService(IUnitOfWork unitOfWork, IValidacionService validacionService)
         {
             _unitOfWork = unitOfWork;
             _validacionService = validacionService;
         }
 
+        /// <summary>
+        /// Crea una inscripción completa con autodefinición, requisitos, méritos y apoyos necesarios.
+        /// Implementa RF-05: Inscripción a llamado público.
+        /// </summary>
+        /// <param name="postulanteId">Identificador único del postulante que se inscribe</param>
+        /// <param name="inscripcionDto">DTO con los datos completos de la inscripción</param>
+        /// <returns>
+        /// ApiResponseDto con InscripcionResponseDto que incluye el ID y detalles de la inscripción creada.
+        /// Success = false si:
+        /// - El postulante no existe
+        /// - El llamado no existe o no está abierto
+        /// - Ya existe una inscripción del postulante para ese llamado
+        /// - El departamento seleccionado no está disponible para el llamado
+        /// </returns>
+        /// <exception cref="Exception">Cuando ocurre un error en la transacción de creación</exception>
+        /// <remarks>
+        /// La inscripción se crea dentro de una transacción que incluye:
+        /// 1. Validación de postulante y llamado
+        /// 2. Validación de disponibilidad del llamado
+        /// 3. Validación de no duplicación de inscripción
+        /// 4. Validación de departamento válido para el llamado
+        /// 5. Creación de la inscripción con estado "Pendiente"
+        /// 6. Registro de autodefinición Ley (afrodescendiente, trans, discapacidad)
+        /// 7. Registro de requisitos excluyentes cumplidos
+        /// 8. Registro de méritos con documentos de respaldo
+        /// 9. Registro de apoyos necesarios solicitados
+        /// 
+        /// Si ocurre algún error, la transacción se revierte completamente (rollback).
+        /// </remarks>
         public async Task<ApiResponseDto<InscripcionResponseDto>> CrearInscripcionAsync(
             int postulanteId,
             CrearInscripcionDto inscripcionDto)
@@ -169,6 +207,31 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Obtiene el detalle completo de una inscripción específica.
+        /// Implementa RF-08: Consulta de detalle de inscripción.
+        /// </summary>
+        /// <param name="inscripcionId">Identificador único de la inscripción</param>
+        /// <returns>
+        /// ApiResponseDto con InscripcionResponseDto que incluye:
+        /// - Datos del postulante y llamado
+        /// - Autodefinición Ley (afrodescendiente, trans, discapacidad)
+        /// - Lista de requisitos excluyentes con estado de cumplimiento
+        /// - Lista de méritos con puntajes obtenidos y documentos
+        /// - Lista de apoyos necesarios solicitados
+        /// - Puntaje total calculado
+        /// - Estado de la inscripción
+        /// Success = false si la inscripción no existe
+        /// </returns>
+        /// <exception cref="Exception">Cuando ocurre un error en la consulta</exception>
+        /// <remarks>
+        /// Este método carga todos los datos relacionados de la inscripción:
+        /// - Postulante, Llamado, Departamento
+        /// - AutodefinicionLey
+        /// - RequisitosPostulante con detalles de cada requisito
+        /// - MeritosPostulante con items puntuables y documentos
+        /// - ApoyosSolicitados con descripción de apoyos
+        /// </remarks>
         public async Task<ApiResponseDto<InscripcionResponseDto>> ObtenerInscripcionPorIdAsync(int inscripcionId)
         {
             try
@@ -204,6 +267,25 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Obtiene la lista de todas las inscripciones de un postulante específico.
+        /// Implementa RF-07: Visualización de inscripciones del postulante.
+        /// </summary>
+        /// <param name="postulanteId">Identificador único del postulante</param>
+        /// <returns>
+        /// ApiResponseDto con lista de InscripcionSimpleResponseDto que incluye:
+        /// - ID de la inscripción
+        /// - Título del llamado
+        /// - Nombre del departamento
+        /// - Fecha de inscripción
+        /// - Estado actual de la inscripción (Pendiente, Aprobada, Rechazada, etc.)
+        /// </returns>
+        /// <exception cref="Exception">Cuando ocurre un error en la consulta</exception>
+        /// <remarks>
+        /// Este método retorna una vista simplificada de las inscripciones,
+        /// sin cargar todos los detalles de requisitos, méritos y apoyos.
+        /// Para obtener el detalle completo, usar ObtenerInscripcionPorIdAsync.
+        /// </remarks>
         public async Task<ApiResponseDto<List<InscripcionSimpleResponseDto>>> ObtenerInscripcionesPorPostulanteAsync(int postulanteId)
         {
             try
@@ -237,6 +319,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<bool>> ValidarInscripcionExistenteAsync(int postulanteId, int llamadoId)
         {
             try
@@ -261,6 +344,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<bool>> ValidarRequisitosObligatoriosAsync(int inscripcionId)
         {
             try
@@ -285,6 +369,7 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponseDto<decimal>> CalcularPuntajeTotalAsync(int inscripcionId)
         {
             try

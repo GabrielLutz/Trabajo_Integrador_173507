@@ -10,17 +10,44 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.BusinessLogic.Services
 {
+    /// <summary>
+    /// Servicio de negocio para gestión de postulantes.
+    /// Implementa requerimientos funcionales RF-01 y RF-02.
+    /// </summary>
     public class PostulanteService : IPostulanteService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidacionService _validacionService;
 
+        /// <summary>
+        /// Constructor del servicio de postulantes.
+        /// </summary>
+        /// <param name="unitOfWork">Unidad de trabajo para acceso a datos</param>
+        /// <param name="validacionService">Servicio de validaciones de negocio</param>
         public PostulanteService(IUnitOfWork unitOfWork, IValidacionService validacionService)
         {
             _unitOfWork = unitOfWork;
             _validacionService = validacionService;
         }
 
+        /// <summary>
+        /// Obtiene los datos completos de un postulante por su ID y verifica completitud de datos.
+        /// Implementa RF-01: Visualización de datos del postulante.
+        /// </summary>
+        /// <param name="postulanteId">Identificador único del postulante</param>
+        /// <returns>
+        /// ApiResponseDto con PostulanteResponseDto que incluye:
+        /// - Datos personales completos del postulante
+        /// - DatosCompletados: indica si el postulante completó todos los datos obligatorios (Nombre, Apellido, Cédula)
+        /// </returns>
+        /// <exception cref="Exception">Cuando ocurre un error en la consulta a la base de datos</exception>
+        /// <remarks>
+        /// Este método verifica que los campos obligatorios estén completos:
+        /// - Nombre
+        /// - Apellido
+        /// - Cédula de Identidad
+        /// El flag DatosCompletados determina si el postulante puede realizar inscripciones.
+        /// </remarks>
         public async Task<ApiResponseDto<PostulanteResponseDto>> ObtenerPostulantePorIdAsync(int postulanteId)
         {
             try
@@ -75,6 +102,38 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Actualiza los datos personales del postulante con validaciones de negocio.
+        /// Implementa RF-02: Actualización de datos personales del postulante.
+        /// </summary>
+        /// <param name="postulanteId">Identificador único del postulante</param>
+        /// <param name="datosPersonales">DTO con los nuevos datos personales a actualizar</param>
+        /// <returns>
+        /// ApiResponseDto con PostulanteResponseDto actualizado.
+        /// Success = true si la actualización fue exitosa.
+        /// Success = false si:
+        /// - El formato de cédula es inválido
+        /// - El email no tiene formato válido
+        /// - La edad es menor a 18 años
+        /// - La cédula ya está registrada por otro postulante
+        /// - El postulante no existe
+        /// </returns>
+        /// <exception cref="Exception">Cuando ocurre un error en la transacción de actualización</exception>
+        /// <remarks>
+        /// Validaciones aplicadas (RF-20):
+        /// - ValidarCedulaIdentidad: formato de cédula uruguaya válido
+        /// - ValidarEmail: formato de email correcto
+        /// - ValidarEdadMinima: edad >= 18 años
+        /// - Unicidad de cédula si se está modificando
+        /// 
+        /// Campos actualizables:
+        /// - Nombre, Apellido
+        /// - FechaNacimiento
+        /// - CedulaIdentidad (verificando unicidad)
+        /// - Género y GeneroOtro
+        /// - Email, Celular, Teléfono
+        /// - Domicilio
+        /// </remarks>
         public async Task<ApiResponseDto<PostulanteResponseDto>> CompletarDatosPersonalesAsync(
             int postulanteId,
             PostulanteDatosPersonalesDto datosPersonales)
@@ -159,6 +218,21 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Verifica si una cédula de identidad está disponible para registro.
+        /// Implementa RF-20: Validación de unicidad de cédula.
+        /// </summary>
+        /// <param name="cedulaIdentidad">Cédula de identidad uruguaya sin puntos ni guiones</param>
+        /// <returns>
+        /// ApiResponseDto con bool indicando:
+        /// - true: la cédula está disponible (no existe en el sistema)
+        /// - false: la cédula ya está registrada por otro postulante
+        /// </returns>
+        /// <exception cref="Exception">Cuando ocurre un error en la consulta a la base de datos</exception>
+        /// <remarks>
+        /// Este método es utilizado para validación en tiempo real durante el registro
+        /// y evita duplicación de postulantes en el sistema.
+        /// </remarks>
         public async Task<ApiResponseDto<bool>> ValidarCedulaDisponibleAsync(string cedulaIdentidad)
         {
             try
@@ -183,6 +257,20 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Verifica si un email está disponible para registro.
+        /// </summary>
+        /// <param name="email">Dirección de correo electrónico a validar</param>
+        /// <returns>
+        /// ApiResponseDto con bool indicando:
+        /// - true: el email está disponible (no existe en el sistema)
+        /// - false: el email ya está registrado por otro postulante
+        /// </returns>
+        /// <exception cref="Exception">Cuando ocurre un error en la consulta a la base de datos</exception>
+        /// <remarks>
+        /// Este método es utilizado para validación en tiempo real durante el registro
+        /// y evita duplicación de emails en el sistema.
+        /// </remarks>
         public async Task<ApiResponseDto<bool>> ValidarEmailDisponibleAsync(string email)
         {
             try

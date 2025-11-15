@@ -10,12 +10,16 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.DataAccess.Repositories
 {
+    /// <summary>
+    /// Repositorio de pruebas del tribunal, utilizado para planificar y calificar (RF-11/RF-12).
+    /// </summary>
     public class PruebaRepository : Repository<Prueba>, IPruebaRepository
     {
         public PruebaRepository(ApplicationDbContext context) : base(context)
         {
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Prueba>> GetByLlamadoIdAsync(int llamadoId)
         {
             return await _dbSet
@@ -24,6 +28,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .ToListAsync();
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Prueba>> GetPruebasActivasAsync(int llamadoId)
         {
             return await _dbSet
@@ -33,6 +38,7 @@ namespace PortalDGC.DataAccess.Repositories
                 .ToListAsync();
         }
 
+            /// <inheritdoc />
         public async Task<Prueba?> GetByIdWithEvaluacionesAsync(int pruebaId)
         {
             return await _dbSet

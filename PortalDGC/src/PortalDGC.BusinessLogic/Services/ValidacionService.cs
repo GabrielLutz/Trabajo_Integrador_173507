@@ -10,15 +10,31 @@ using System.Threading.Tasks;
 
 namespace PortalDGC.BusinessLogic.Services
 {
+    /// <summary>
+    /// Servicio centralizado de validaciones de negocio (RF-20).
+    /// Incluye reglas para cédula uruguaya, edad mínima y requisitos excluyentes.
+    /// </summary>
     public class ValidacionService : IValidacionService
     {
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Inicializa el servicio de validaciones.
+        /// </summary>
+        /// <param name="unitOfWork">Unidad de trabajo para validaciones que dependen de datos persistidos</param>
         public ValidacionService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Valida el formato de la cédula uruguaya (con puntos y guion o solo números).
+        /// Implementa RF-20: ValidarCedulaUruguayaAsync.
+        /// </summary>
+        /// <param name="cedulaIdentidad">Cédula de identidad a validar, con o sin separadores.</param>
+        /// <returns>
+        /// ApiResponseDto que indica si la cédula es válida e incluye mensajes de error cuando corresponde.
+        /// </returns>
         public ApiResponseDto<bool> ValidarCedulaIdentidad(string cedulaIdentidad)
         {
             var errores = new List<string>();
@@ -45,6 +61,13 @@ namespace PortalDGC.BusinessLogic.Services
             };
         }
 
+        /// <summary>
+        /// Valida el formato de un correo electrónico siguiendo las reglas básicas de RFC 5322.
+        /// </summary>
+        /// <param name="email">Correo electrónico a evaluar.</param>
+        /// <returns>
+        /// ApiResponseDto que indica si el correo es válido e incluye mensajes de error cuando el formato es incorrecto.
+        /// </returns>
         public ApiResponseDto<bool> ValidarEmail(string email)
         {
             var errores = new List<string>();
@@ -71,6 +94,13 @@ namespace PortalDGC.BusinessLogic.Services
             };
         }
 
+        /// <summary>
+        /// Valida un número de teléfono uruguayo en formato nacional.
+        /// </summary>
+        /// <param name="telefono">Número telefónico a validar.</param>
+        /// <returns>
+        /// ApiResponseDto que indica si el teléfono cumple el patrón esperado y detalla errores encontrados.
+        /// </returns>
         public ApiResponseDto<bool> ValidarTelefono(string telefono)
         {
             var errores = new List<string>();
@@ -93,6 +123,15 @@ namespace PortalDGC.BusinessLogic.Services
             };
         }
 
+        /// <summary>
+        /// Valida que la edad sea igual o superior al mínimo requerido (18 por defecto).
+        /// Implementa RF-20: ValidarEdadAsync.
+        /// </summary>
+        /// <param name="fechaNacimiento">Fecha de nacimiento del postulante.</param>
+        /// <param name="edadMinima">Edad mínima permitida para el proceso.</param>
+        /// <returns>
+        /// ApiResponseDto que indica si se cumple la edad mínima e incluye mensajes descriptivos.
+        /// </returns>
         public ApiResponseDto<bool> ValidarEdadMinima(DateTime fechaNacimiento, int edadMinima = 18)
         {
             var errores = new List<string>();
@@ -117,6 +156,15 @@ namespace PortalDGC.BusinessLogic.Services
             };
         }
 
+        /// <summary>
+        /// Valida que una fecha dada se encuentre dentro de un rango permitido.
+        /// </summary>
+        /// <param name="fecha">Fecha a evaluar.</param>
+        /// <param name="fechaInicio">Inicio del rango admitido.</param>
+        /// <param name="fechaFin">Fin del rango admitido.</param>
+        /// <returns>
+        /// ApiResponseDto que indica si la fecha está dentro del rango y detalla los errores encontrados.
+        /// </returns>
         public ApiResponseDto<bool> ValidarFechaRango(DateTime fecha, DateTime fechaInicio, DateTime fechaFin)
         {
             var errores = new List<string>();
@@ -135,6 +183,13 @@ namespace PortalDGC.BusinessLogic.Services
             };
         }
 
+        /// <summary>
+        /// Verifica si un llamado está dentro del rango de fechas habilitado.
+        /// </summary>
+        /// <param name="llamadoId">Identificador del llamado a validar.</param>
+        /// <returns>
+        /// ApiResponseDto que indica si el llamado se encuentra abierto e incluye mensajes descriptivos.
+        /// </returns>
         public async Task<ApiResponseDto<bool>> ValidarLlamadoAbierto(int llamadoId)
         {
             try
@@ -159,6 +214,13 @@ namespace PortalDGC.BusinessLogic.Services
             }
         }
 
+        /// <summary>
+        /// Valida que un postulante tenga todos los datos obligatorios completos.
+        /// </summary>
+        /// <param name="postulanteId">Identificador del postulante a validar.</param>
+        /// <returns>
+        /// ApiResponseDto que indica si los datos del postulante están completos e incluye mensajes descriptivos.
+        /// </returns>
         public async Task<ApiResponseDto<bool>> ValidarPostulanteCompletoDatos(int postulanteId)
         {
             try
