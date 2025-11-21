@@ -46,6 +46,9 @@ export class GenerarOrdenamientoComponent implements OnInit {
     });
   }
 
+  /**
+   * Recupera el llamado desde la ruta y carga la previsualización inicial (RF-14).
+   */
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.llamadoId = +params['llamadoId'];
@@ -53,6 +56,9 @@ export class GenerarOrdenamientoComponent implements OnInit {
     });
   }
 
+  /**
+   * Obtiene inscripciones evaluadas para mostrar un preview antes de generar el ordenamiento.
+   */
   cargarPreview(): void {
     this.cargandoPreview = true;
 
@@ -73,18 +79,27 @@ export class GenerarOrdenamientoComponent implements OnInit {
     });
   }
 
+  /**
+   * Avanza al siguiente paso del asistente.
+   */
   siguientePaso(): void {
     if (this.pasoActual < this.totalPasos) {
       this.pasoActual++;
     }
   }
 
+  /**
+   * Retrocede un paso en el asistente.
+   */
   pasoAnterior(): void {
     if (this.pasoActual > 1) {
       this.pasoActual--;
     }
   }
 
+  /**
+   * Invoca el endpoint de generación de ordenamiento aplicando los parámetros elegidos (RF-14).
+   */
   generarOrdenamiento(): void {
     if (this.form.invalid) return;
 
@@ -116,19 +131,31 @@ export class GenerarOrdenamientoComponent implements OnInit {
     });
   }
 
+  /**
+   * Navega al detalle del ordenamiento recién generado.
+   */
   verOrdenamiento(ordenamientoId: number): void {
     this.router.navigate(['/tribunal/ordenamiento', ordenamientoId]);
   }
 
+  /**
+   * Regresa al dashboard del tribunal.
+   */
   volver(): void {
     this.router.navigate(['/tribunal/dashboard']);
   }
 
+  /**
+   * Cantidad de postulantes que superan el puntaje mínimo configurado.
+   */
   getCantidadAprobados(): number {
     const minimo = this.puntajeMinimoAprobacion;
     return this.previewInscripciones.filter(i => (i.puntajeTotal || 0) >= minimo).length;
   }
 
+  /**
+   * Cantidad de aprobados por universo de acción afirmativa para los indicadores.
+   */
   getCantidadPorUniverso(universo: 'afro' | 'trans' | 'disc'): number {
     const minimo = this.puntajeMinimoAprobacion;
     const filtrados = this.previewInscripciones.filter(i => (i.puntajeTotal || 0) >= minimo);
@@ -141,18 +168,30 @@ export class GenerarOrdenamientoComponent implements OnInit {
     }
   }
 
+  /**
+   * Puntaje mínimo ingresado en el formulario.
+   */
   get puntajeMinimoAprobacion(): number {
     return this.form.controls.puntajeMinimoAprobacion.value;
   }
 
+  /**
+   * Indica si se deben aplicar cuotas en la generación del ordenamiento.
+   */
   get aplicarCuotas(): boolean {
     return this.form.controls.aplicarCuotas.value;
   }
 
+  /**
+   * Indica si el ordenamiento a generar es definitivo.
+   */
   get esDefinitivo(): boolean {
     return this.form.controls.esDefinitivo.value;
   }
 
+  /**
+   * Determina si la inscripción supera el umbral para ser considerada aprobada.
+   */
   esAprobado(inscripcion: InscripcionParaEvaluar): boolean {
     return (inscripcion.puntajeTotal ?? 0) >= this.puntajeMinimoAprobacion;
   }

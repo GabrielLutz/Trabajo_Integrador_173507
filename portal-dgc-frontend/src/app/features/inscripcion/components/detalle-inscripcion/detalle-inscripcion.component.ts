@@ -24,6 +24,9 @@ export class DetalleInscripcionComponent implements OnInit, OnDestroy {
     private readonly inscripcionService: InscripcionService
   ) {}
 
+  /**
+   * Recupera la inscripción seleccionada según el parámetro de ruta (RF-05).
+   */
   ngOnInit(): void {
     this.route.paramMap
       .pipe(
@@ -62,15 +65,24 @@ export class DetalleInscripcionComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Cancela las suscripciones reactivas activas.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * Vuelve al listado de inscripciones del postulante.
+   */
   irAListado(): void {
     this.router.navigate(['/perfil', 'mis-inscripciones']);
   }
 
+  /**
+   * Devuelve la clase de badge para el estado de la inscripción.
+   */
   getEstadoBadgeClass(estado: string): string {
     const normalized = estado?.toLowerCase() ?? '';
 
@@ -93,6 +105,9 @@ export class DetalleInscripcionComponent implements OnInit, OnDestroy {
     return 'badge-secondary';
   }
 
+  /**
+   * Indica si la inscripción posee datos de autodefinición cargados.
+   */
   tieneAutodefinicion(): boolean {
     const autodefinicion = this.inscripcion?.autodefinicion;
     return !!autodefinicion && (

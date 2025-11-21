@@ -1,3 +1,9 @@
+/**
+ * Versión legacy de los contratos de inscripción, conservada para módulos antiguos.
+ */
+/**
+ * Versiones legacy de los contratos de inscripción utilizados por módulos heredados.
+ */
 export interface CrearInscripcion {
 	llamadoId: number;
 	departamentoId: number;

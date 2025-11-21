@@ -23,10 +23,16 @@ export class ListaLlamadosComponent implements OnInit {
     private readonly router: Router
   ) {}
 
+  /**
+   * Carga llamados activos e inactivos al iniciar la pantalla (RF-03).
+   */
   ngOnInit(): void {
     this.cargarLlamados();
   }
 
+  /**
+   * Consulta el backend para obtener los llamados segmentados por estado.
+   */
   cargarLlamados(): void {
     this.loading = true;
     forkJoin({
@@ -50,16 +56,25 @@ export class ListaLlamadosComponent implements OnInit {
     });
   }
 
+  /**
+   * Navega al detalle del llamado seleccionado.
+   */
   verDetalle(llamadoId: number): void {
     this.router.navigate(['/llamados', llamadoId]);
   }
 
+  /**
+   * Inicia el flujo de inscripción usando el llamado elegido.
+   */
   inscribirse(llamadoId: number): void {
     this.router.navigate(['/inscripcion', 'nuevo'], {
       queryParams: { llamadoId }
     });
   }
 
+  /**
+   * Calcula los días restantes hasta la fecha de cierre para el badge informativo.
+   */
   getDiasRestantes(fechaCierre: Date | string): number {
     const hoy = new Date();
     const cierre = new Date(fechaCierre);
@@ -67,10 +82,16 @@ export class ListaLlamadosComponent implements OnInit {
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
 
+  /**
+   * Permite alternar entre la vista de llamados activos e inactivos.
+   */
   seleccionarEstado(estado: 'activos' | 'inactivos'): void {
     this.estadoSeleccionado = estado;
   }
 
+  /**
+   * Conjunto de llamados visibles según el filtro actual.
+   */
   get llamadosVisibles(): Llamado[] {
     return this.estadoSeleccionado === 'activos'
       ? this.llamadosActivos

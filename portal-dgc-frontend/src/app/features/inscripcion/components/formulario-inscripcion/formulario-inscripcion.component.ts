@@ -78,6 +78,9 @@ export class FormularioInscripcionComponent implements OnInit, OnDestroy, AfterV
     });
   }
 
+  /**
+   * Obtiene parámetros iniciales y dispara la carga del llamado y las validaciones (RF-05).
+   */
   ngOnInit(): void {
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       const idParam = params['llamadoId'];
@@ -93,29 +96,47 @@ export class FormularioInscripcionComponent implements OnInit, OnDestroy, AfterV
     });
   }
 
+  /**
+   * Registra listeners de archivos una vez que Angular renderiza los inputs de méritos.
+   */
   ngAfterViewInit(): void {
     this.fileInputs.changes
       .pipe(startWith(this.fileInputs), takeUntil(this.destroy$))
       .subscribe((inputs) => this.registrarListenersArchivo(inputs));
   }
 
+  /**
+   * Libera recursos asociados al formulario cuando se destruye el componente.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * Arreglo reactivo con los requisitos del llamado.
+   */
   get requisitosArray(): FormArray<RequisitoFormGroup> {
     return this.formRequisitos.controls.requisitos;
   }
 
+  /**
+   * Arreglo reactivo con los méritos disponibles para cargar respaldos.
+   */
   get meritosArray(): FormArray<MeritoFormGroup> {
     return this.formMeritos.controls.meritos;
   }
 
+  /**
+   * Arreglo reactivo con los apoyos que el postulante puede solicitar.
+   */
   get apoyosArray(): FormArray<FormControl<boolean>> {
     return this.formApoyos.controls.apoyosSeleccionados;
   }
 
+  /**
+   * Recupera el detalle del llamado e inicializa cada paso del formulario (RF-04/RF-05).
+   */
   cargarLlamado(): void {
     this.loading = true;
     this.llamadoService.obtenerLlamadoDetalle(this.llamadoId).subscribe({
@@ -135,6 +156,9 @@ export class FormularioInscripcionComponent implements OnInit, OnDestroy, AfterV
     });
   }
 
+  /**
+   * Verifica que el postulante tenga sus datos completos antes de continuar (RF-02).
+   */
   validarPostulante(): void {
     this.postulanteService.obtenerPostulante(this.postulanteId).subscribe({
       next: (response) => {
@@ -146,6 +170,9 @@ export class FormularioInscripcionComponent implements OnInit, OnDestroy, AfterV
     });
   }
 
+  /**
+   * Inicializa los formularios dinámicos de requisitos, méritos y apoyos.
+   */
   prepararFormularios(): void {
     if (!this.llamado) {
       return;
@@ -168,6 +195,9 @@ export class FormularioInscripcionComponent implements OnInit, OnDestroy, AfterV
     });
   }
 
+  /**
+   * Avanza al siguiente paso del flujo guiado validando el formulario actual.
+   */
   siguientePaso(): void {
     const formActual = this.obtenerFormActual();
 
@@ -188,12 +218,18 @@ export class FormularioInscripcionComponent implements OnInit, OnDestroy, AfterV
     }
   }
 
+  /**
+   * Retrocede al paso inmediato anterior.
+   */
   pasoAnterior(): void {
     if (this.pasoActual > 0) {
       this.pasoActual--;
     }
   }
 
+  /**
+   * Permite navegar a un paso ya completado para revisar información.
+   */
   irAPaso(paso: number): void {
     if (paso <= this.pasoActual) {
       this.pasoActual = paso;
@@ -225,6 +261,9 @@ export class FormularioInscripcionComponent implements OnInit, OnDestroy, AfterV
     control.setValue(file.name);
   }
 
+  /**
+   * Construye el payload y lo envía al backend validando términos y campos requeridos (RF-05).
+   */
   enviarInscripcion(): void {
     if (!this.aceptaTerminos) {
       window.alert('Debe aceptar los términos y condiciones.');
@@ -271,6 +310,9 @@ export class FormularioInscripcionComponent implements OnInit, OnDestroy, AfterV
       });
   }
 
+  /**
+   * Devuelve el nombre del departamento seleccionado para mostrar en la UI.
+   */
   obtenerNombreDepartamento(): string {
     if (!this.llamado) {
       return '';
@@ -284,22 +326,34 @@ export class FormularioInscripcionComponent implements OnInit, OnDestroy, AfterV
     return departamento?.nombre ?? '';
   }
 
+  /**
+   * Cantidad de requisitos marcados como cumplidos por el postulante.
+   */
   contarRequisitos(): number {
     return this.requisitosArray.controls.filter(
       (control) => control.controls.cumple.value === true
     ).length;
   }
 
+  /**
+   * Cantidad de méritos seleccionados para enviar al backend.
+   */
   contarMeritos(): number {
     return this.meritosArray.controls.filter(
       (control) => control.controls.seleccionado.value
     ).length;
   }
 
+  /**
+   * Cantidad de apoyos solicitados en el paso correspondiente.
+   */
   contarApoyos(): number {
     return this.apoyosArray.controls.filter((control) => control.value).length;
   }
 
+  /**
+   * Cancela la inscripción y regresa al detalle del llamado actual.
+   */
   cancelar(): void {
     if (window.confirm('¿Está seguro que desea cancelar la inscripción?')) {
       this.router.navigate(['/llamados', this.llamadoId]);

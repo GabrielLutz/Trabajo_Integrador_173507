@@ -32,6 +32,9 @@ export class VerOrdenamientoComponent implements OnInit {
     private readonly tribunalService: TribunalService
   ) {}
 
+  /**
+   * Recupera el identificador desde la ruta y carga el ordenamiento correspondiente (RF-15).
+   */
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.ordenamientoId = +params['ordenamientoId'];
@@ -39,6 +42,9 @@ export class VerOrdenamientoComponent implements OnInit {
     });
   }
 
+  /**
+   * Obtiene del backend el detalle completo del ordenamiento y sus posiciones.
+   */
   cargarOrdenamiento(): void {
     this.loading = true;
     this.error = null;
@@ -61,6 +67,9 @@ export class VerOrdenamientoComponent implements OnInit {
     });
   }
 
+  /**
+   * Filtra las posiciones por nombre o cédula para facilitar la búsqueda.
+   */
   filtrarPosiciones(): void {
     if (!this.ordenamiento) return;
 
@@ -77,6 +86,9 @@ export class VerOrdenamientoComponent implements OnInit {
     );
   }
 
+  /**
+   * Solicita la publicación definitiva del ordenamiento (RF-15).
+   */
   publicarOrdenamiento(): void {
     if (
       !confirm(
@@ -107,18 +119,30 @@ export class VerOrdenamientoComponent implements OnInit {
     });
   }
 
+  /**
+   * Marcador temporal para exportar el ordenamiento a PDF.
+   */
   exportarPDF(): void {
     alert('Funcionalidad de exportar PDF en desarrollo');
   }
 
+  /**
+   * Marcador temporal para exportar el ordenamiento a Excel.
+   */
   exportarExcel(): void {
     alert('Funcionalidad de exportar Excel en desarrollo');
   }
 
+  /**
+   * Regresa al panel principal del tribunal.
+   */
   volver(): void {
     this.router.navigate(['/tribunal/dashboard']);
   }
 
+  /**
+   * Clase CSS a aplicar según el tipo de ordenamiento.
+   */
   getTipoBadgeClass(tipo: string): string {
     switch (tipo.toLowerCase()) {
       case 'general':
@@ -134,6 +158,9 @@ export class VerOrdenamientoComponent implements OnInit {
     }
   }
 
+  /**
+   * Clase CSS según el estado de publicación del ordenamiento.
+   */
   getEstadoBadgeClass(estado: string): string {
     switch (estado.toLowerCase()) {
       case 'preliminar':
@@ -147,6 +174,9 @@ export class VerOrdenamientoComponent implements OnInit {
     }
   }
 
+  /**
+   * Puntaje más alto encontrado en el ordenamiento.
+   */
   get puntajeMaximo(): number {
     if (!this.ordenamiento || this.ordenamiento.posiciones.length === 0) {
       return 0;
@@ -155,6 +185,9 @@ export class VerOrdenamientoComponent implements OnInit {
     return this.ordenamiento.posiciones[0]?.puntajeTotal ?? 0;
   }
 
+  /**
+   * Puntaje promedio de todas las posiciones del ordenamiento.
+   */
   get puntajePromedio(): number {
     if (!this.ordenamiento || this.ordenamiento.posiciones.length === 0) {
       return 0;
@@ -168,6 +201,9 @@ export class VerOrdenamientoComponent implements OnInit {
     return total / this.ordenamiento.posiciones.length;
   }
 
+  /**
+   * Total de posiciones que aplican a algún cupo o cuota especial.
+   */
   get cantidadCuotasAplicadas(): number {
     if (!this.ordenamiento) {
       return 0;

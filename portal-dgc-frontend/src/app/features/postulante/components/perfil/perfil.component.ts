@@ -24,15 +24,24 @@ export class PerfilComponent implements OnInit, OnDestroy {
     private readonly router: Router
   ) {}
 
+  /**
+   * Recupera la información del postulante al ingresar al perfil (RF-01).
+   */
   ngOnInit(): void {
     this.cargarPerfil();
   }
 
+  /**
+   * Cancela las suscripciones activas del componente.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * Invoca el servicio para obtener el detalle del postulante.
+   */
   cargarPerfil(): void {
     this.loading = true;
     this.error = '';
@@ -56,10 +65,16 @@ export class PerfilComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Redirige al formulario de edición de datos personales.
+   */
   editarDatos(): void {
     this.router.navigate(['/perfil', 'editar']);
   }
 
+  /**
+   * Iniciales del postulante para mostrar en el avatar del perfil.
+   */
   get iniciales(): string {
     if (!this.postulante) {
       return '';
@@ -71,6 +86,9 @@ export class PerfilComponent implements OnInit, OnDestroy {
     return letras.slice(0, 2).join('');
   }
 
+  /**
+   * Nombre y apellido concatenados listos para la cabecera del perfil.
+   */
   get nombreCompleto(): string {
     if (!this.postulante) {
       return '';
@@ -78,6 +96,9 @@ export class PerfilComponent implements OnInit, OnDestroy {
     return `${this.postulante.nombre} ${this.postulante.apellido}`.trim();
   }
 
+  /**
+   * Devuelve el género para mostrar, contemplando autodefiniciones.
+   */
   get generoDescripcion(): string {
     if (!this.postulante) {
       return '';
@@ -88,6 +109,9 @@ export class PerfilComponent implements OnInit, OnDestroy {
     return this.postulante.genero;
   }
 
+  /**
+   * Formatea la fecha al formato corto utilizado en la UI.
+   */
   formatearFecha(fecha: Date | string): string {
     const date = fecha instanceof Date ? fecha : new Date(fecha);
     if (Number.isNaN(date.getTime())) {
@@ -100,6 +124,9 @@ export class PerfilComponent implements OnInit, OnDestroy {
     }).format(date);
   }
 
+  /**
+   * Devuelve un guion cuando el valor viene vacío para evitar strings en blanco.
+   */
   mostrarValor(valor?: string | null): string {
     return valor && valor.trim().length ? valor : '-';
   }
