@@ -82,16 +82,25 @@ export class DatosPersonalesComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Inicializa los suscriptores del formulario y dispara la carga inicial (RF-02).
+   */
   ngOnInit(): void {
     this.configurarFormateoCedula();
     this.cargarDatos();
   }
 
+  /**
+   * Libera las suscripciones reactivas para evitar pérdidas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * Recupera los datos personales del postulante para precargar el formulario.
+   */
   cargarDatos(): void {
     this.loading = true;
     this.postulanteService.obtenerPostulante(this.postulanteId).subscribe({
@@ -132,6 +141,9 @@ export class DatosPersonalesComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Ajusta las validaciones cuando se selecciona el género "Otro".
+   */
   onGeneroChange(): void {
     const genero = this.form.get('genero')?.value;
     const generoOtroControl = this.form.controls.generoOtro;
@@ -144,6 +156,9 @@ export class DatosPersonalesComponent implements OnInit, OnDestroy {
     generoOtroControl?.updateValueAndValidity();
   }
 
+  /**
+   * Dispara la validación remota de cédula según RF-20.
+   */
   validarCedula(): void {
     const cedula = this.form.controls.cedulaIdentidad.value;
     if (cedula) {
@@ -165,6 +180,9 @@ export class DatosPersonalesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Envía el formulario y coordina la navegación posterior al éxito (RF-02).
+   */
   onSubmit(): void {
     if (this.form.invalid) {
       this.marcarCamposComoTocados();
@@ -217,14 +235,23 @@ export class DatosPersonalesComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Vuelve al perfil del postulante sin persistir cambios.
+   */
   cancelar(): void {
     this.router.navigate(['/perfil']);
   }
 
+  /**
+   * Fuerza que todos los controles queden en estado touched para mostrar errores.
+   */
   marcarCamposComoTocados(): void {
     Object.values(this.form.controls).forEach((control) => control.markAsTouched());
   }
 
+  /**
+   * Devuelve el mensaje de validación apropiado para cada campo de la UI.
+   */
   getErrorMessage(fieldName: string): string {
     const field = this.form.controls[fieldName as keyof DatosPersonalesForm];
     if (field?.hasError('required')) {

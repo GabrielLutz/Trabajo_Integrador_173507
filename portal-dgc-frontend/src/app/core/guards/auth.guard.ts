@@ -15,6 +15,9 @@ import { AuthService } from '../services/auth.service';
 export class AuthGuard implements CanActivate, CanLoad {
   constructor(private readonly auth: AuthService, private readonly router: Router) {}
 
+  /**
+   * Verifica si el usuario está autenticado y, de no ser así, redirige al login conservando la URL solicitada (RF-01).
+   */
   private check(url?: string): boolean {
     if (this.auth.isAuthenticated()) {
       return true;
@@ -24,10 +27,16 @@ export class AuthGuard implements CanActivate, CanLoad {
     return false;
   }
 
+  /**
+   * Evita el acceso a rutas activadas cuando el usuario no tiene sesión válida (RF-01).
+   */
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Observable<boolean> | Promise<boolean> {
     return this.check(state.url);
   }
 
+  /**
+   * Bloquea la carga perezosa de módulos protegidos si el usuario no está autenticado (RF-01).
+   */
   canLoad(route: Route, segments: UrlSegment[]): boolean | Observable<boolean> | Promise<boolean> {
     const url = '/' + segments.map((s) => s.path).join('/');
     return this.check(url);

@@ -26,11 +26,16 @@ export class RegistroComponent {
     contrasena: ['', [Validators.required, Validators.minLength(6)]]
   });
 
-  // expose controls for template convenience (f['nombre'], etc.)
+  /**
+   * Controles expuestos para simplificar el template.
+   */
   get f() {
     return this.form.controls;
   }
 
+  /**
+   * Formatea la cédula de identidad en tiempo real respetando el patrón uruguayo.
+   */
   onCedulaInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     const digits = input.value.replace(/\D/g, '').slice(0, 8);
@@ -70,6 +75,9 @@ export class RegistroComponent {
     return formatted;
   }
 
+  /**
+   * Realiza el registro simulado y redirige al login con mensaje de confirmación (RF-02).
+   */
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();

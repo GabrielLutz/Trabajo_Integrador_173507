@@ -33,6 +33,9 @@ export class ListaInscripcionesComponent implements OnInit {
     private readonly tribunalService: TribunalService
   ) {}
 
+  /**
+   * Carga las inscripciones del llamado seleccionado al iniciar la vista (RF-11).
+   */
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.llamadoId = +params['llamadoId'];
@@ -40,6 +43,9 @@ export class ListaInscripcionesComponent implements OnInit {
     });
   }
 
+  /**
+   * Consulta al backend las inscripciones pendientes de evaluación.
+   */
   cargarInscripciones(): void {
     this.loading = true;
     this.error = null;
@@ -63,11 +69,17 @@ export class ListaInscripcionesComponent implements OnInit {
     });
   }
 
+  /**
+   * Construye los valores disponibles para los filtros desplegables.
+   */
   extraerFiltros(): void {
     this.departamentos = [...new Set(this.inscripciones.map((i) => i.departamento))];
     this.estados = [...new Set(this.inscripciones.map((i) => i.estadoInscripcion))];
   }
 
+  /**
+   * Aplica los filtros seleccionados sobre la lista original.
+   */
   aplicarFiltros(): void {
     this.inscripcionesFiltradas = this.inscripciones.filter((inscripcion) => {
       const cumpleNombre =
@@ -89,6 +101,9 @@ export class ListaInscripcionesComponent implements OnInit {
     });
   }
 
+  /**
+   * Restablece los filtros y muestra todas las inscripciones.
+   */
   limpiarFiltros(): void {
     this.filtroNombre = '';
     this.filtroDepartamento = '';
@@ -97,6 +112,9 @@ export class ListaInscripcionesComponent implements OnInit {
     this.inscripcionesFiltradas = [...this.inscripciones];
   }
 
+  /**
+   * Determina el estado de avance de evaluación de la inscripción.
+   */
   getEstadoEvaluacion(inscripcion: InscripcionParaEvaluar): string {
     if (inscripcion.pruebasEvaluadas === 0 && inscripcion.meritosEvaluados === 0) {
       return 'Pendiente';
@@ -110,6 +128,9 @@ export class ListaInscripcionesComponent implements OnInit {
     return 'Completa';
   }
 
+  /**
+   * Devuelve la clase del badge según el estado calculado.
+   */
   getEstadoBadgeClass(estado: string): string {
     switch (estado) {
       case 'Pendiente':
@@ -123,16 +144,25 @@ export class ListaInscripcionesComponent implements OnInit {
     }
   }
 
+  /**
+   * Calcula el porcentaje de evaluación completada para mostrar en la UI.
+   */
   getProgresoEvaluacion(inscripcion: InscripcionParaEvaluar): number {
     const totalItems = inscripcion.pruebasTotales + inscripcion.meritosTotales;
     const evaluados = inscripcion.pruebasEvaluadas + inscripcion.meritosEvaluados;
     return totalItems > 0 ? Math.round((evaluados / totalItems) * 100) : 0;
   }
 
+  /**
+   * Abre el detalle de evaluación de la inscripción seleccionada.
+   */
   verDetalle(inscripcionId: number): void {
     this.router.navigate(['/tribunal/inscripcion', inscripcionId, 'evaluar']);
   }
 
+  /**
+   * Retorna al dashboard principal del tribunal.
+   */
   volver(): void {
     this.router.navigate(['/tribunal/dashboard']);
   }

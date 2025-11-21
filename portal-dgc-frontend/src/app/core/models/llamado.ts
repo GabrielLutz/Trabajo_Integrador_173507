@@ -1,3 +1,6 @@
+/**
+ * Versiones legacy de los contratos de llamado utilizados en componentes antiguos.
+ */
 export interface Llamado {
 	id: number;
 	titulo: string;

@@ -1,3 +1,6 @@
+/**
+ * Resumen de la inscripción que el tribunal debe evaluar (RF-11 y RF-12).
+ */
 export interface InscripcionParaEvaluar {
   inscripcionId: number;
   postulanteId: number;
@@ -20,6 +23,9 @@ export interface InscripcionParaEvaluar {
   aproboPruebas?: boolean;
 }
 
+/**
+ * Detalle completo para mostrar al tribunal antes de calificar (RF-11).
+ */
 export interface DetalleEvaluacion {
   inscripcionId: number;
   nombreCompleto: string;
@@ -37,6 +43,9 @@ export interface DetalleEvaluacion {
   puntajeTotal: number;
 }
 
+/**
+ * Requisito evaluado dentro del flujo de revisión del tribunal.
+ */
 export interface RequisitoPostulanteResponse {
   requisitoId: number;
   descripcionRequisito: string;
@@ -45,6 +54,9 @@ export interface RequisitoPostulanteResponse {
   observaciones?: string;
 }
 
+/**
+ * Resultado de la evaluación de una prueba por parte del tribunal (RF-11).
+ */
 export interface EvaluacionPrueba {
   id: number;
   inscripcionId: number;
@@ -59,6 +71,9 @@ export interface EvaluacionPrueba {
   verificado: boolean;
 }
 
+/**
+ * Mérito pendiente de valoración según RF-12.
+ */
 export interface MeritoParaEvaluar {
   meritoPostulanteId: number;
   nombreItem: string;
@@ -72,6 +87,9 @@ export interface MeritoParaEvaluar {
   estado?: string;
 }
 
+/**
+ * Payload que envía el tribunal para calificar una prueba (RF-11).
+ */
 export interface CalificarPruebaDto {
   inscripcionId: number;
   pruebaId: number;
@@ -79,6 +97,9 @@ export interface CalificarPruebaDto {
   observaciones?: string;
 }
 
+/**
+ * Payload que registra la valoración de un mérito (RF-12).
+ */
 export interface ValorarMeritoDto {
   meritoPostulanteId: number;
   puntajeAsignado: number;
@@ -86,6 +107,9 @@ export interface ValorarMeritoDto {
   observaciones?: string;
 }
 
+/**
+ * Metadatos de una prueba planificada dentro del llamado (RF-11).
+ */
 export interface PruebaDto {
   id: number;
   llamadoId: number;
@@ -103,6 +127,9 @@ export interface PruebaDto {
   promedioGeneral?: number;
 }
 
+/**
+ * Ordenamiento generado luego de la evaluación, utilizado en RF-14.
+ */
 export interface Ordenamiento {
   id: number;
   llamadoId: number;
@@ -115,6 +142,9 @@ export interface Ordenamiento {
   cantidadPosiciones: number;
 }
 
+/**
+ * Detalle del ordenamiento para visualizar posiciones y puntajes (RF-14).
+ */
 export interface OrdenamientoDetalle {
   id: number;
   tituloLlamado: string;
@@ -124,6 +154,9 @@ export interface OrdenamientoDetalle {
   posiciones: PosicionOrdenamiento[];
 }
 
+/**
+ * Posición individual dentro del ordenamiento resultante.
+ */
 export interface PosicionOrdenamiento {
   posicion: number;
   nombreCompleto: string;
@@ -136,6 +169,9 @@ export interface PosicionOrdenamiento {
   puntajeMeritos?: number;
 }
 
+/**
+ * Estadísticas generales del tribunal que apoyan el seguimiento de RF-11.
+ */
 export interface EstadisticasTribunal {
   llamadoId: number;
   tituloLlamado: string;
@@ -154,6 +190,9 @@ export interface EstadisticasTribunal {
   fechaOrdenamiento?: Date;
 }
 
+/**
+ * Estadísticas por prueba incluidas en el tablero del tribunal.
+ */
 export interface EstadisticaPrueba {
   nombrePrueba: string;
   evaluados: number;
@@ -161,6 +200,9 @@ export interface EstadisticaPrueba {
   promedioNota: number;
 }
 
+/**
+ * Solicitud proveniente del tribunal para generar o regenerar el ordenamiento (RF-14).
+ */
 export interface GenerarOrdenamientoDto {
   llamadoId: number;
   aplicarCuotas: boolean;
@@ -168,6 +210,9 @@ export interface GenerarOrdenamientoDto {
   esDefinitivo: boolean;
 }
 
+/**
+ * Respuesta genérica local cuando el módulo opera sin depender del contrato compartido.
+ */
 export interface ApiResponse<T> {
   success: boolean;
   message: string;

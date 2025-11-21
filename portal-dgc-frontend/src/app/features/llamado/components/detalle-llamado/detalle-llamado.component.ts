@@ -22,6 +22,9 @@ export class DetalleLlamadoComponent implements OnInit {
     private readonly llamadoService: LlamadoService
   ) {}
 
+  /**
+   * Obtiene el identificador de ruta y carga el detalle del llamado (RF-04).
+   */
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
@@ -29,6 +32,9 @@ export class DetalleLlamadoComponent implements OnInit {
     }
   }
 
+  /**
+   * Pide al backend la información completa del llamado.
+   */
   cargarLlamado(id: number): void {
     this.loading = true;
     this.llamadoService.obtenerLlamadoDetalle(id).subscribe({
@@ -45,10 +51,16 @@ export class DetalleLlamadoComponent implements OnInit {
     });
   }
 
+  /**
+   * Cambia la pestaña visible en el detalle del llamado.
+   */
   cambiarTab(tab: 'informacion' | 'requisitos' | 'puntuables' | 'apoyos'): void {
     this.tabActiva = tab;
   }
 
+  /**
+   * Inicia el proceso de inscripción cuando el llamado está habilitado (RF-05).
+   */
   inscribirse(): void {
     if (this.llamado && this.puedeInscribirse) {
       this.router.navigate(['/inscripcion', 'nuevo'], {
@@ -57,10 +69,16 @@ export class DetalleLlamadoComponent implements OnInit {
     }
   }
 
+  /**
+   * Regresa al listado general de llamados.
+   */
   volver(): void {
     this.router.navigate(['/llamados']);
   }
 
+  /**
+   * Valida si el postulante puede acceder al flujo de inscripción.
+   */
   get puedeInscribirse(): boolean {
     if (!this.llamado) {
       return false;
@@ -73,6 +91,9 @@ export class DetalleLlamadoComponent implements OnInit {
     return this.llamado.estado?.toLowerCase() === 'activo';
   }
 
+  /**
+   * Determina la clase visual del badge según el estado del llamado.
+   */
   getEstadoBadgeClass(): string {
     const estado = this.llamado?.estado?.toLowerCase() ?? '';
 

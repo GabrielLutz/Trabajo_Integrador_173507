@@ -41,6 +41,9 @@ export class DetalleEvaluacionComponent implements OnInit {
     this.formValorarMeritos = this.fb.group({});
   }
 
+  /**
+   * Obtiene la inscripción a evaluar y carga su detalle (RF-11/RF-12).
+   */
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.inscripcionId = +params['inscripcionId'];
@@ -48,6 +51,9 @@ export class DetalleEvaluacionComponent implements OnInit {
     });
   }
 
+  /**
+   * Recupera la información completa para evaluar requisitos, pruebas y méritos.
+   */
   cargarDetalle(): void {
     this.loading = true;
     this.error = null;
@@ -71,6 +77,9 @@ export class DetalleEvaluacionComponent implements OnInit {
     });
   }
 
+  /**
+   * Obtiene las pruebas disponibles del llamado para vincularlas a la evaluación.
+   */
   cargarPruebasDisponibles(): void {
     if (!this.detalle) {
       return;
@@ -88,6 +97,9 @@ export class DetalleEvaluacionComponent implements OnInit {
     });
   }
 
+  /**
+   * Construye dinámicamente el formulario de méritos con validaciones por item (RF-12).
+   */
   inicializarFormularioMeritos(): void {
     if (!this.detalle) {
       return;
@@ -107,6 +119,9 @@ export class DetalleEvaluacionComponent implements OnInit {
     this.formValorarMeritos = this.fb.group(controls);
   }
 
+  /**
+   * Selecciona una prueba a calificar y precarga sus datos si ya fue evaluada.
+   */
   seleccionarPrueba(prueba: PruebaDto): void {
     this.pruebaSeleccionada = prueba;
 
@@ -131,6 +146,9 @@ export class DetalleEvaluacionComponent implements OnInit {
     }
   }
 
+  /**
+   * Envía al backend la calificación de la prueba elegida (RF-11).
+   */
   calificarPrueba(): void {
     if (this.formCalificarPrueba.invalid || !this.pruebaSeleccionada) {
       this.formCalificarPrueba.markAllAsTouched();
@@ -166,6 +184,9 @@ export class DetalleEvaluacionComponent implements OnInit {
     });
   }
 
+  /**
+   * Persiste en lote las valoraciones de todos los méritos del postulante (RF-12).
+   */
   valorarTodosMeritos(): void {
     if (this.formValorarMeritos.invalid || !this.detalle) {
       this.formValorarMeritos.markAllAsTouched();
@@ -199,19 +220,31 @@ export class DetalleEvaluacionComponent implements OnInit {
     });
   }
 
+  /**
+   * Cambia la sección visible del detalle según la acción del tribunal.
+   */
   cambiarSeccion(seccion: 'requisitos' | 'pruebas' | 'meritos'): void {
     this.seccionActiva = seccion;
   }
 
+  /**
+   * Devuelve el puntaje máximo configurado para un mérito específico.
+   */
   getPuntajeMaximoMerito(meritoId: number): number {
     const merito = this.detalle?.meritos.find((m) => m.meritoPostulanteId === meritoId);
     return merito?.puntajeMaximo ?? 0;
   }
 
+  /**
+   * Indica si la prueba ya fue calificada para reflejarlo en la UI.
+   */
   estaPruebaEvaluada(pruebaId: number): boolean {
     return this.detalle?.pruebas?.some((p) => p.pruebaId === pruebaId) ?? false;
   }
 
+  /**
+   * Vuelve a la lista de inscripciones pendientes del tribunal.
+   */
   volver(): void {
     this.router.navigate(['/tribunal/llamado', 1, 'inscripciones']); // MVP: llamadoId fijo hasta vincular datos
   }

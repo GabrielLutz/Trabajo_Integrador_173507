@@ -31,6 +31,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Recupera parámetros de la ruta para mostrar mensajes y configurar el returnUrl.
+   */
   ngOnInit(): void {
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       if (params['registered']) {
@@ -50,10 +53,16 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Exposición conveniente de los controles del formulario para el template.
+   */
   get f() {
     return this.form.controls;
   }
 
+  /**
+   * Ejecuta el login simulado utilizando AuthService y redirige según corresponda (RF-01).
+   */
   submit(): void {
     this.error = '';
     if (this.form.invalid) {
@@ -74,11 +83,17 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Cancela suscripciones activas para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * Navega al formulario de registro simulado.
+   */
   goToRegistro(): void {
     this.router.navigate(['/login/registro']);
   }

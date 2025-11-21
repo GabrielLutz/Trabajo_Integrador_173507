@@ -1,3 +1,6 @@
+/**
+ * DTO legacy para el perfil del postulante en módulos anteriores.
+ */
 export interface Postulante {
 	id: number;
 	nombre: string;

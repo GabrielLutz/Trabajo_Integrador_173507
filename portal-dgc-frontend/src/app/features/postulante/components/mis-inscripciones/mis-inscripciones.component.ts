@@ -20,10 +20,16 @@ export class MisInscripcionesComponent implements OnInit {
     private readonly router: Router
   ) {}
 
+  /**
+   * Carga las inscripciones del postulante al inicializar la vista (RF-05).
+   */
   ngOnInit(): void {
     this.cargarInscripciones();
   }
 
+  /**
+   * Recupera desde el servicio todas las inscripciones del postulante logueado.
+   */
   cargarInscripciones(): void {
     this.loading = true;
     this.error = '';
@@ -47,10 +53,16 @@ export class MisInscripcionesComponent implements OnInit {
       });
   }
 
+  /**
+   * Navega al detalle de inscripción seleccionado.
+   */
   verDetalle(inscripcionId: number): void {
     this.router.navigate(['/inscripcion', inscripcionId]);
   }
 
+  /**
+   * Determina la clase CSS del badge según el estado de la inscripción.
+   */
   getEstadoBadgeClass(estado: string): string {
     const normalized = estado?.toLowerCase() ?? '';
 
@@ -73,6 +85,9 @@ export class MisInscripcionesComponent implements OnInit {
     return 'badge-secondary';
   }
 
+  /**
+   * Permite optimizar *ngFor devolviendo la clave primaria de la inscripción.
+   */
   trackByInscripcion(_: number, inscripcion: InscripcionSimple): number {
     return inscripcion.id;
   }
