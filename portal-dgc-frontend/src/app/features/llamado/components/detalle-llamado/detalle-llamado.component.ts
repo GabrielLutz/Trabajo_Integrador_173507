@@ -16,6 +16,9 @@ export class DetalleLlamadoComponent implements OnInit {
   error = '';
   tabActiva: 'informacion' | 'requisitos' | 'puntuables' | 'apoyos' = 'informacion';
 
+  // Para depuración: fecha/hora actual
+  now: Date = new Date();
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
@@ -83,12 +86,12 @@ export class DetalleLlamadoComponent implements OnInit {
     if (!this.llamado) {
       return false;
     }
-
-    if (typeof this.llamado.estaHabilitadoInscripcion === 'boolean') {
-      return this.llamado.estaHabilitadoInscripcion;
-    }
-
-    return this.llamado.estado?.toLowerCase() === 'activo';
+    // Habilitado si el estado es 'activo' o 'abierto' y la fecha de cierre es futura
+    const estado = (this.llamado.estado || '').toLowerCase();
+    const esHabilitado = estado === 'activo' || estado === 'abierto';
+    const cierre = new Date(this.llamado.fechaCierre);
+    const ahora = new Date();
+    return esHabilitado && cierre.getTime() > ahora.getTime();
   }
 
   /**
