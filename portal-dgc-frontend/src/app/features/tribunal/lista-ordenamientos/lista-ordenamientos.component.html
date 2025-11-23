@@ -1,0 +1,35 @@
+<div class="lista-ordenamientos">
+  <button class="btn-back" (click)="volverAlDashboard()">← Volver al Dashboard</button>
+  <h1>Ordenamientos del Llamado</h1>
+
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <div *ngIf="!error && ordenamientos.length === 0" class="no-ordenamientos">
+    No hay ordenamientos disponibles para este llamado.
+  </div>
+
+  <div *ngIf="ordenamientos.length > 0">
+    <table class="tabla-ordenamientos">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Tipo</th>
+          <th>Estado</th>
+          <th>Fecha de Generación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ord of ordenamientos">
+          <td>{{ ord.id }}</td>
+          <td>{{ ord.tipo }}</td>
+          <td>{{ ord.estado }}</td>
+          <td>{{ ord.fechaGeneracion | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <button (click)="verDetalle(ord.id)">Ver Detalle</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -6,6 +6,7 @@ import { DetalleEvaluacionComponent } from './detalle-evaluacion/detalle-evaluac
 import { GenerarOrdenamientoComponent } from './generar-ordenamiento/generar-ordenamiento.component';
 import { VerOrdenamientoComponent } from './ver-ordenamiento/ver-ordenamiento.component';
 
+import { ListaOrdenamientosComponent } from './lista-ordenamientos/lista-ordenamientos.component';
 const routes: Routes = [
   {
     path: '',
@@ -27,6 +28,10 @@ const routes: Routes = [
   {
     path: 'llamado/:llamadoId/generar-ordenamiento',
     component: GenerarOrdenamientoComponent
+  },
+  {
+    path: 'llamado/:llamadoId/ordenamientos',
+    component: ListaOrdenamientosComponent
   },
   {
     path: 'ordenamiento/:ordenamientoId',
