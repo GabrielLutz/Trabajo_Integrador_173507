@@ -23,6 +23,13 @@ export class DashboardTribunalComponent implements OnInit {
   ) {}
 
   /**
+   * Navega a la lista de ordenamientos generados (RF-14).
+   */
+  verOrdenamientos(): void {
+    this.router.navigate(['/tribunal/llamado', this.llamadoId, 'ordenamientos']);
+  }
+
+  /**
    * Carga las estadísticas del llamado asignado al iniciar el panel (RF-11).
    */
   ngOnInit(): void {

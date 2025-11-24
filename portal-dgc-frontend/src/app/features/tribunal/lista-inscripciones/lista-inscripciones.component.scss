@@ -10,16 +10,16 @@
     margin-bottom: 2rem;
 
     .btn-back {
-      padding: 0.5rem 1rem;
-      background: #95a5a6;
-      color: #ffffff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-
-      &:hover {
-        background: #7f8c8d;
-      }
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    }
+    button:hover {
+      background: #1565c0;
     }
 
     h1 {

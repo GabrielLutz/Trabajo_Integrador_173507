@@ -9,6 +9,7 @@ import { ListaInscripcionesComponent } from './lista-inscripciones/lista-inscrip
 import { DetalleEvaluacionComponent } from './detalle-evaluacion/detalle-evaluacion.component';
 import { GenerarOrdenamientoComponent } from './generar-ordenamiento/generar-ordenamiento.component';
 import { VerOrdenamientoComponent } from './ver-ordenamiento/ver-ordenamiento.component';
+import { ListaOrdenamientosComponent } from './lista-ordenamientos/lista-ordenamientos.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { VerOrdenamientoComponent } from './ver-ordenamiento/ver-ordenamiento.co
     DetalleEvaluacionComponent,
     GenerarOrdenamientoComponent,
     VerOrdenamientoComponent,
+    ListaOrdenamientosComponent,
     TribunalRoutingModule,
     SharedModule
   ]
