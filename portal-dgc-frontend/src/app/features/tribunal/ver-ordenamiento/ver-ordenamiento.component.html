@@ -1,7 +1,10 @@
 <div class="ver-ordenamiento">
   <div class="header">
-    <button class="btn-back" (click)="volver()">← Volver</button>
     <h1>Ordenamiento Final</h1>
+  </div>
+  <div class="acciones-navegacion" style="margin: 2em 0 1em 0; display: flex; gap: 1em;">
+    <button class="btn-back" (click)="volverDashboard()">← Volver a Dashboard</button>
+    <button class="btn-back" style="margin-left: 8px;" (click)="volverOrdenamientos()">↩ Ir a Ordenamientos</button>
   </div>
 
   <div *ngIf="loading" class="loading">
@@ -160,7 +163,7 @@
             </td>
 
             <td class="col-total">
-              <div class="puntaje-total">{{ (posicion.puntajeTotal ?? 0) | number:'1.1-1' }}</div>
+              <div class="puntaje-total">{{ (posicion.puntajeTotal) | number:'1.1-1' }}</div>
             </td>
 
             <td class="col-cuota">

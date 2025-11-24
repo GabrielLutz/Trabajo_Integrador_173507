@@ -42,7 +42,7 @@ export class ListaOrdenamientosComponent implements OnInit {
   }
 
   verDetalle(ordenamientoId: number): void {
-    this.router.navigate(['/tribunal/ordenamiento', ordenamientoId]);
+    this.router.navigate(['/tribunal/ordenamiento', ordenamientoId], { state: { llamadoId: this.llamadoId } });
   }
 
   volverAlDashboard(): void {

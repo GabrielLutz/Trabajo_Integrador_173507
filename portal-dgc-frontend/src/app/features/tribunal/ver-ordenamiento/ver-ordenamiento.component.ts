@@ -26,6 +26,8 @@ export class VerOrdenamientoComponent implements OnInit {
   filtroNombre = '';
   posicionesFiltradas: PosicionOrdenamiento[] = [];
 
+  llamadoId!: number;
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
@@ -38,6 +40,9 @@ export class VerOrdenamientoComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.ordenamientoId = +params['ordenamientoId'];
+      if (history.state && history.state.llamadoId) {
+        this.llamadoId = history.state.llamadoId;
+      }
       this.cargarOrdenamiento();
     });
   }
@@ -136,10 +141,19 @@ export class VerOrdenamientoComponent implements OnInit {
   /**
    * Regresa al panel principal del tribunal.
    */
-  volver(): void {
+  volverDashboard(): void {
     this.router.navigate(['/tribunal/dashboard']);
   }
 
+  volverOrdenamientos(): void {
+    // Si no se pudo obtener el llamadoId, vuelve al dashboard como fallback
+    if (!this.llamadoId) {
+      this.router.navigate(['/tribunal/dashboard']);
+    } else {
+      this.router.navigate(['/tribunal/llamado', this.llamadoId, 'ordenamientos']);
+    }
+  }
+  
   /**
    * Clase CSS a aplicar según el tipo de ordenamiento.
    */
