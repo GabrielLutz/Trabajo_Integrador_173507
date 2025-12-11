@@ -1,0 +1,591 @@
+.detalle-evaluacion {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    .btn-back {
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    }
+    button:hover {
+      background: #1565c0;
+    }
+  }
+
+  .loading {
+    text-align: center;
+    padding: 3rem;
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .error-message {
+    background: #ffeeee;
+    color: #cc0000;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+
+    button {
+      margin-left: 1rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      background: #3498db;
+      color: #ffffff;
+      cursor: pointer;
+
+      &:hover {
+        background: #2980b9;
+      }
+    }
+  }
+
+  .success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .postulante-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+
+    .postulante-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #ecf0f1;
+
+      h2 {
+        margin: 0;
+        color: #2c3e50;
+      }
+
+      .badges {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        color: #ffffff;
+        font-size: 0.9rem;
+
+        &.afro {
+          background: #9b59b6;
+        }
+
+        &.trans {
+          background: #e91e63;
+        }
+
+        &.disc {
+          background: #00bcd4;
+        }
+      }
+    }
+
+    .postulante-datos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+
+      .dato {
+        .label {
+          color: #7f8c8d;
+          font-size: 0.9rem;
+          display: block;
+          margin-bottom: 0.25rem;
+        }
+
+        .value {
+          color: #2c3e50;
+          font-weight: 600;
+        }
+      }
+    }
+
+    .puntaje-resumen {
+      display: flex;
+      gap: 2rem;
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+
+      .puntaje-item {
+        flex: 1;
+        text-align: center;
+
+        .label {
+          display: block;
+          color: #7f8c8d;
+          font-size: 0.9rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .valor {
+          display: block;
+          font-size: 1.8rem;
+          font-weight: 700;
+          color: #3498db;
+        }
+
+        &.total {
+          border-left: 2px solid #ecf0f1;
+
+          .valor {
+            color: #27ae60;
+            font-size: 2.2rem;
+          }
+        }
+      }
+    }
+  }
+
+  .tabs-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+
+    .tab {
+      flex: 1;
+      padding: 1rem;
+      background: #ffffff;
+      border: 2px solid #ecf0f1;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      font-weight: 600;
+      color: #7f8c8d;
+      transition: all 0.3s ease;
+
+      &.active {
+        background: #3498db;
+        color: #ffffff;
+        border-color: #3498db;
+      }
+
+      &:hover:not(.active) {
+        background: #ecf0f1;
+      }
+    }
+  }
+
+  .seccion-content {
+    background: #ffffff;
+    border-radius: 0 0 12px 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h3 {
+      margin-top: 0;
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+    }
+
+    h4 {
+      color: #34495e;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .requisitos-lista {
+    .requisito-item {
+      padding: 1rem;
+      border: 2px solid #ecf0f1;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+
+      .requisito-info {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+
+        .icono {
+          font-size: 1rem;
+          font-weight: 700;
+          color: #34495e;
+        }
+
+        .texto {
+          flex: 1;
+
+          .descripcion {
+            margin: 0 0 0.5rem;
+            color: #2c3e50;
+            font-weight: 500;
+          }
+
+          .badge-obligatorio {
+            background: #e74c3c;
+            color: #ffffff;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+          }
+
+          .observaciones {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+
+  .pruebas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+
+    .pruebas-disponibles {
+      .prueba-item {
+        padding: 1rem;
+        border: 2px solid #ecf0f1;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          border-color: #3498db;
+          background: #f8f9fa;
+        }
+
+        .prueba-nombre {
+          font-weight: 600;
+          color: #2c3e50;
+          margin-bottom: 0.5rem;
+        }
+
+        .prueba-info {
+          display: flex;
+          gap: 1rem;
+          font-size: 0.9rem;
+          color: #7f8c8d;
+        }
+
+        .evaluado-badge {
+          color: #27ae60;
+          font-size: 0.85rem;
+          margin-top: 0.5rem;
+        }
+      }
+    }
+
+    .formulario-calificar {
+      border: 2px solid #3498db;
+      border-radius: 8px;
+      padding: 1.5rem;
+      background: #f8f9fa;
+
+      .form-group {
+        margin-bottom: 1rem;
+
+        label {
+          display: block;
+          color: #34495e;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+        }
+
+        input,
+        textarea {
+          width: 100%;
+          padding: 0.75rem;
+          border: 2px solid #ecf0f1;
+          border-radius: 6px;
+          font-size: 1rem;
+
+          &:focus {
+            outline: none;
+            border-color: #3498db;
+          }
+        }
+
+        .error {
+          color: #e74c3c;
+          font-size: 0.85rem;
+          margin-top: 0.25rem;
+        }
+      }
+
+      .btn-guardar {
+        width: 100%;
+        padding: 1rem;
+        background: #27ae60;
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover:not(:disabled) {
+          background: #229954;
+        }
+
+        &:disabled {
+          background: #95a5a6;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+
+  .pruebas-evaluadas {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid #ecf0f1;
+
+    .prueba-evaluada-item {
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+
+      .prueba-nombre {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+      }
+
+      .puntaje {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+
+        &.aprobado {
+          color: #27ae60;
+        }
+
+        &.desaprobado {
+          color: #e74c3c;
+        }
+
+        .estado {
+          font-size: 0.9rem;
+          margin-left: 1rem;
+        }
+      }
+
+      .observaciones {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .meritos-lista {
+    .merito-item {
+      border: 2px solid #ecf0f1;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+
+      .merito-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+
+        h4 {
+          flex: 1;
+          margin: 0;
+          color: #2c3e50;
+        }
+
+        .categoria-badge {
+          background: #3498db;
+          color: #ffffff;
+          padding: 0.4rem 0.8rem;
+          border-radius: 12px;
+          font-size: 0.85rem;
+        }
+
+        .puntaje-max {
+          color: #7f8c8d;
+          font-weight: 600;
+        }
+      }
+
+      .documento {
+        background: #f8f9fa;
+        padding: 0.75rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        color: #34495e;
+      }
+
+      .merito-evaluacion {
+        .form-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+
+        .form-group {
+          label {
+            display: block;
+            color: #34495e;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+          }
+
+          input[type='number'],
+          textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ecf0f1;
+            border-radius: 6px;
+
+            &:focus {
+              outline: none;
+              border-color: #3498db;
+            }
+          }
+
+          &.checkbox {
+            display: flex;
+            align-items: center;
+
+            label {
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              margin: 0;
+              cursor: pointer;
+
+              input[type='checkbox'] {
+                width: auto;
+                margin: 0;
+              }
+            }
+          }
+        }
+      }
+
+      .evaluacion-previa {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 2px solid #ecf0f1;
+
+        .badge-evaluado {
+          padding: 0.5rem 1rem;
+          border-radius: 12px;
+          font-weight: 600;
+
+          &.aprobado {
+            background: #d4edda;
+            color: #155724;
+          }
+
+          &:not(.aprobado) {
+            background: #f8d7da;
+            color: #721c24;
+          }
+        }
+      }
+    }
+  }
+
+  .btn-guardar-meritos {
+    width: 100%;
+    padding: 1.25rem;
+    background: #27ae60;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 2rem;
+
+    &:hover:not(:disabled) {
+      background: #229954;
+    }
+
+    &:disabled {
+      background: #95a5a6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .detalle-evaluacion {
+    .pruebas-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .postulante-card .puntaje-resumen {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .detalle-evaluacion {
+    padding: 1rem;
+
+    .tabs-container {
+      flex-direction: column;
+    }
+
+    .merito-evaluacion .form-row {
+      grid-template-columns: 1fr !important;
+    }
+  }
+}

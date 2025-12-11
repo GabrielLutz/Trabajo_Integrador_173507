@@ -1,0 +1,29 @@
+<header class="header">
+	<div class="container">
+		<div class="logo" (click)="navegarA('/')">
+			<h1>Portal DGC</h1>
+			<p>Dirección General de Casinos</p>
+		</div>
+
+		<button class="menu-toggle" (click)="toggleMenu()">
+			☰
+		</button>
+
+		<nav class="nav" [class.open]="menuAbierto">
+			<a *ngIf="isAuthenticated" routerLink="/llamados" routerLinkActive="active" (click)="menuAbierto = false">
+				Llamados
+			</a>
+			<a *ngIf="isAuthenticated" routerLink="/perfil/mis-inscripciones" routerLinkActive="active" (click)="menuAbierto = false">
+				Mis Inscripciones
+			</a>
+			<a *ngIf="isAuthenticated"
+				routerLink="/perfil"
+				routerLinkActive="active"
+				[routerLinkActiveOptions]="{ exact: true }"
+				(click)="menuAbierto = false">
+				Mi Perfil
+			</a>
+			<button *ngIf="isAuthenticated" class="logout-btn" (click)="logout()">Cerrar sesión</button>
+		</nav>
+	</div>
+</header>

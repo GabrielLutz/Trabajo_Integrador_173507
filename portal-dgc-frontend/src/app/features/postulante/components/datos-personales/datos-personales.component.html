@@ -1,0 +1,169 @@
+<div class="container">
+	<h1>Datos Personales</h1>
+	<p class="subtitle">Complete sus datos personales para poder inscribirse a los llamados.</p>
+
+	<app-loading *ngIf="loading"></app-loading>
+
+	<div class="success-message" *ngIf="success">
+		✓ Datos actualizados correctamente. Redirigiendo...
+	</div>
+
+	<app-error-message *ngIf="error" [message]="error"></app-error-message>
+
+	<form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
+		<div class="form-section">
+			<h2>Información Personal</h2>
+
+			<div class="form-row">
+				<div class="form-group">
+					<label for="nombre">Nombre *</label>
+					<input
+						id="nombre"
+						type="text"
+						formControlName="nombre"
+						placeholder="Ingrese su nombre"
+						[class.error]="form.get('nombre')?.invalid && form.get('nombre')?.touched">
+					<span class="error-text" *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched">
+						{{ getErrorMessage('nombre') }}
+					</span>
+				</div>
+
+				<div class="form-group">
+					<label for="apellido">Apellido *</label>
+					<input
+						id="apellido"
+						type="text"
+						formControlName="apellido"
+						placeholder="Ingrese su apellido"
+						[class.error]="form.get('apellido')?.invalid && form.get('apellido')?.touched">
+					<span class="error-text" *ngIf="form.get('apellido')?.invalid && form.get('apellido')?.touched">
+						{{ getErrorMessage('apellido') }}
+					</span>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="form-group">
+					<label for="fechaNacimiento">Fecha de Nacimiento *</label>
+					<input
+						id="fechaNacimiento"
+						type="date"
+						formControlName="fechaNacimiento"
+						[class.error]="form.get('fechaNacimiento')?.invalid && form.get('fechaNacimiento')?.touched">
+					<span class="error-text" *ngIf="form.get('fechaNacimiento')?.invalid && form.get('fechaNacimiento')?.touched">
+						{{ getErrorMessage('fechaNacimiento') }}
+					</span>
+				</div>
+
+				<div class="form-group">
+					<label for="cedulaIdentidad">Cédula de Identidad *</label>
+					<input
+						id="cedulaIdentidad"
+						type="text"
+						formControlName="cedulaIdentidad"
+						placeholder="1.234.567-8"
+						[class.error]="form.get('cedulaIdentidad')?.invalid && form.get('cedulaIdentidad')?.touched">
+					<span class="error-text" *ngIf="form.get('cedulaIdentidad')?.invalid && form.get('cedulaIdentidad')?.touched">
+						{{ getErrorMessage('cedulaIdentidad') }}
+					</span>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="form-group">
+					<label for="genero">Género *</label>
+					<select
+						id="genero"
+						formControlName="genero"
+						(change)="onGeneroChange()"
+						[class.error]="form.get('genero')?.invalid && form.get('genero')?.touched">
+						<option value="">Seleccione</option>
+						<option *ngFor="let gen of generos" [value]="gen">{{ gen }}</option>
+					</select>
+					<span class="error-text" *ngIf="form.get('genero')?.invalid && form.get('genero')?.touched">
+						{{ getErrorMessage('genero') }}
+					</span>
+				</div>
+
+				<div class="form-group" *ngIf="form.get('genero')?.value === 'Otro'">
+					<label for="generoOtro">Especifique *</label>
+					<input
+						id="generoOtro"
+						type="text"
+						formControlName="generoOtro"
+						placeholder="Especifique"
+						[class.error]="form.get('generoOtro')?.invalid && form.get('generoOtro')?.touched">
+				</div>
+			</div>
+		</div>
+
+		<div class="form-section">
+			<h2>Información de Contacto</h2>
+
+			<div class="form-row">
+				<div class="form-group">
+					<label for="email">Email *</label>
+					<input
+						id="email"
+						type="email"
+						formControlName="email"
+						placeholder="usuario@ejemplo.com"
+						[class.error]="form.get('email')?.invalid && form.get('email')?.touched">
+					<span class="error-text" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+						{{ getErrorMessage('email') }}
+					</span>
+				</div>
+
+				<div class="form-group">
+					<label for="celular">Celular *</label>
+					<input
+						id="celular"
+						type="tel"
+						formControlName="celular"
+						placeholder="099123456"
+						[class.error]="form.get('celular')?.invalid && form.get('celular')?.touched">
+					<span class="error-text" *ngIf="form.get('celular')?.invalid && form.get('celular')?.touched">
+						{{ getErrorMessage('celular') }}
+					</span>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="form-group">
+					<label for="telefono">Teléfono</label>
+					<input
+						id="telefono"
+						type="tel"
+						formControlName="telefono"
+						placeholder="24012345"
+						[class.error]="form.get('telefono')?.invalid && form.get('telefono')?.touched">
+					<span class="error-text" *ngIf="form.get('telefono')?.invalid && form.get('telefono')?.touched">
+						{{ getErrorMessage('telefono') }}
+					</span>
+				</div>
+
+				<div class="form-group">
+					<label for="domicilio">Domicilio *</label>
+					<input
+						id="domicilio"
+						type="text"
+						formControlName="domicilio"
+						placeholder="Calle, número, apartamento"
+						[class.error]="form.get('domicilio')?.invalid && form.get('domicilio')?.touched">
+					<span class="error-text" *ngIf="form.get('domicilio')?.invalid && form.get('domicilio')?.touched">
+						{{ getErrorMessage('domicilio') }}
+					</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-actions">
+			<button type="button" class="btn btn-secondary" (click)="cancelar()">
+				Cancelar
+			</button>
+			<button type="submit" class="btn btn-primary" [disabled]="form.invalid || loading">
+				Guardar Datos
+			</button>
+		</div>
+	</form>
+</div>

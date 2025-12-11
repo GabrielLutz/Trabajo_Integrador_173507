@@ -1,0 +1,205 @@
+<div class="ver-ordenamiento">
+  <div class="header">
+    <h1>Ordenamiento Final</h1>
+  </div>
+  <div class="acciones-navegacion" style="margin: 2em 0 1em 0; display: flex; gap: 1em;">
+    <button class="btn-back" (click)="volverDashboard()">← Volver a Dashboard</button>
+    <button class="btn-back" style="margin-left: 8px;" (click)="volverOrdenamientos()">↩ Ir a Ordenamientos</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Cargando ordenamiento...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+    <button (click)="cargarOrdenamiento()">Reintentar</button>
+  </div>
+
+  <div *ngIf="mensajeExito" class="success-message">
+    {{ mensajeExito }}
+  </div>
+
+  <div *ngIf="ordenamiento && !loading" class="contenido">
+    <div class="ordenamiento-header">
+      <div class="info-principal">
+        <h2>{{ ordenamiento.tituloLlamado }}</h2>
+        <div class="badges">
+          <span class="badge tipo-badge" [ngClass]="getTipoBadgeClass(ordenamiento.tipo)">
+            {{ ordenamiento.tipo }}
+          </span>
+          <span class="badge estado-badge" [ngClass]="getEstadoBadgeClass(ordenamiento.estado)">
+            {{ ordenamiento.estado }}
+          </span>
+        </div>
+      </div>
+
+      <div class="metadata">
+        <div class="meta-item">
+          <span class="label">Fecha de Generación:</span>
+          <span class="value">{{ ordenamiento.fechaGeneracion | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Total de Posiciones:</span>
+          <span class="value">{{ ordenamiento.posiciones.length }}</span>
+        </div>
+      </div>
+
+      <div class="actions-header">
+        <button 
+          class="btn-publish"
+          *ngIf="ordenamiento.estado !== 'Publicado'"
+          [disabled]="publicando"
+          (click)="publicarOrdenamiento()">
+          {{ publicando ? 'Publicando...' : '📢 Publicar Ordenamiento' }}
+        </button>
+        <button class="btn-export" (click)="exportarPDF()">
+          📄 Exportar PDF
+        </button>
+        <button class="btn-export" (click)="exportarExcel()">
+          📊 Exportar Excel
+        </button>
+      </div>
+    </div>
+
+    <div class="estadisticas-rapidas">
+      <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-info">
+          <div class="stat-numero">{{ ordenamiento.posiciones.length }}</div>
+          <div class="stat-label">Total Clasificados</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+          <div class="stat-numero">
+            {{ cantidadCuotasAplicadas }}
+          </div>
+          <div class="stat-label">Cuotas Aplicadas</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-info">
+          <div class="stat-numero">
+            {{ puntajeMaximo | number:'1.1-1' }}
+          </div>
+          <div class="stat-label">Puntaje Máximo</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-info">
+          <div class="stat-numero">
+            {{ puntajePromedio | number:'1.1-1' }}
+          </div>
+          <div class="stat-label">Promedio</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="filtro-busqueda">
+      <input 
+        type="text" 
+        [(ngModel)]="filtroNombre"
+        (input)="filtrarPosiciones()"
+        placeholder="Buscar por nombre o cédula...">
+      <span class="resultados-count">
+        Mostrando {{ posicionesFiltradas.length }} de {{ ordenamiento.posiciones.length }}
+      </span>
+    </div>
+
+    <div class="tabla-ordenamiento">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-posicion">Pos.</th>
+            <th class="col-nombre">Nombre Completo</th>
+            <th class="col-ci">CI</th>
+            <th class="col-departamento">Departamento</th>
+            <th class="col-puntajes">Puntajes</th>
+            <th class="col-total">Total</th>
+            <th class="col-cuota">Cuota</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr 
+            *ngFor="let posicion of posicionesFiltradas"
+            [class.cuota-aplicada]="posicion.aplicaCuota"
+            [class.top3]="posicion.posicion <= 3">
+            <td class="col-posicion">
+              <div class="posicion-badge">
+                <span *ngIf="posicion.posicion === 1" class="medalla">🥇</span>
+                <span *ngIf="posicion.posicion === 2" class="medalla">🥈</span>
+                <span *ngIf="posicion.posicion === 3" class="medalla">🥉</span>
+                <span *ngIf="posicion.posicion > 3">{{ posicion.posicion }}</span>
+              </div>
+            </td>
+
+            <td class="col-nombre">
+              <div class="nombre-completo">{{ posicion.nombreCompleto }}</div>
+            </td>
+
+            <td class="col-ci">{{ posicion.cedulaIdentidad }}</td>
+
+            <td class="col-departamento">{{ posicion.departamento }}</td>
+
+            <td class="col-puntajes">
+              <div class="puntajes-detalle">
+                <div class="puntaje-item">
+                  <span class="label">Pruebas:</span>
+                  <span class="valor">{{ (posicion.puntajePruebas ?? 0) | number:'1.0-0' }}</span>
+                </div>
+                <div class="puntaje-item">
+                  <span class="label">Méritos:</span>
+                  <span class="valor">{{ (posicion.puntajeMeritos ?? 0) | number:'1.0-0' }}</span>
+                </div>
+              </div>
+            </td>
+
+            <td class="col-total">
+              <div class="puntaje-total">{{ (posicion.puntajeTotal) | number:'1.1-1' }}</div>
+            </td>
+
+            <td class="col-cuota">
+              <span 
+                *ngIf="posicion.aplicaCuota" 
+                class="badge-cuota"
+                [ngClass]="'cuota-' + (posicion.tipoCuota?.toLowerCase() || 'general')">
+                {{ posicion.tipoCuota }}
+              </span>
+              <span *ngIf="!posicion.aplicaCuota" class="sin-cuota">—</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="leyenda">
+      <h3>Leyenda</h3>
+      <div class="leyenda-items">
+        <div class="leyenda-item">
+          <div class="color-box cuota-afrodescendiente"></div>
+          <span>Cuota Afrodescendiente (8%)</span>
+        </div>
+        <div class="leyenda-item">
+          <div class="color-box cuota-trans"></div>
+          <span>Cuota Trans (1%)</span>
+        </div>
+        <div class="leyenda-item">
+          <div class="color-box cuota-discapacidad"></div>
+          <span>Cuota Discapacidad (4%)</span>
+        </div>
+        <div class="leyenda-item">
+          <div class="color-box top-row"></div>
+          <span>Top 3 posiciones</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,238 @@
+.detalle-inscripcion {
+	padding: 2rem 0 3rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+
+	.back-link {
+		align-self: flex-start;
+		background: none;
+		border: none;
+		color: #1976d2;
+		cursor: pointer;
+		font-size: 0.95rem;
+		padding: 0;
+		transition: color 0.2s;
+
+		&:hover {
+			color: #0d47a1;
+		}
+	}
+
+	.page-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 1rem;
+		flex-wrap: wrap;
+
+		h1 {
+			margin-bottom: 0.25rem;
+			color: #1a237e;
+		}
+
+		.subtitle {
+			color: #616161;
+		}
+
+		.badge {
+			align-self: center;
+			text-transform: capitalize;
+		}
+	}
+
+	.summary-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		gap: 1.25rem;
+
+		.summary-card {
+			display: flex;
+			flex-direction: column;
+			gap: 0.35rem;
+
+			.label {
+				font-size: 0.85rem;
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+				color: #757575;
+			}
+
+			.highlight {
+				font-size: 1.4rem;
+				font-weight: 600;
+				color: #1a237e;
+			}
+		}
+	}
+
+	.detail-section {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+
+		h2 {
+			color: #333;
+		}
+	}
+
+	.chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+
+		.chip {
+			padding: 0.5rem 1rem;
+			border-radius: 999px;
+			border: 1px solid #90caf9;
+			color: #1976d2;
+			background-color: #e3f2fd;
+			transition: all 0.2s;
+
+			&.active {
+				background-color: #1976d2;
+				color: #fff;
+				border-color: transparent;
+			}
+		}
+	}
+
+	.table-wrapper {
+		overflow-x: auto;
+		background-color: #fff;
+		border-radius: 8px;
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			min-width: 640px;
+
+			th,
+			td {
+				padding: 0.75rem 1rem;
+				text-align: left;
+				border-bottom: 1px solid #e0e0e0;
+			}
+
+			th {
+				font-size: 0.85rem;
+				text-transform: uppercase;
+				letter-spacing: 0.04em;
+				color: #757575;
+			}
+
+			tbody tr:hover {
+				background-color: #f9f9f9;
+			}
+		}
+	}
+
+	.meritos-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		gap: 1.25rem;
+
+		.merito-card {
+			header {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				gap: 1rem;
+
+				h3 {
+					font-size: 1.1rem;
+					color: #1a237e;
+				}
+
+				.badge {
+					text-transform: capitalize;
+				}
+			}
+
+			.descripcion {
+				color: #555;
+			}
+
+			dl {
+				margin: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 0.75rem;
+
+				div {
+					dt {
+						font-size: 0.85rem;
+						color: #757575;
+						text-transform: uppercase;
+						letter-spacing: 0.04em;
+						margin-bottom: 0.25rem;
+					}
+
+					dd {
+						margin: 0;
+						color: #333;
+					}
+				}
+			}
+		}
+	}
+
+	.apoyos-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 1rem;
+
+		li {
+			padding: 1.25rem;
+			border-radius: 8px;
+			background-color: #fff;
+			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+
+			h3 {
+				margin-bottom: 0.25rem;
+				color: #1a237e;
+			}
+
+			.tipo {
+				color: #757575;
+				margin-bottom: 0.5rem;
+			}
+		}
+	}
+
+	.empty-section {
+		padding: 1.75rem;
+		text-align: center;
+
+		h2 {
+			margin-bottom: 0.5rem;
+		}
+
+		p {
+			color: #666;
+			margin: 0;
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	.detalle-inscripcion {
+		padding: 1.5rem 0 2rem;
+
+		.page-header {
+			flex-direction: column;
+			align-items: flex-start;
+
+			.badge {
+				align-self: flex-start;
+			}
+		}
+
+		.table-wrapper table {
+			min-width: 100%;
+		}
+	}
+}

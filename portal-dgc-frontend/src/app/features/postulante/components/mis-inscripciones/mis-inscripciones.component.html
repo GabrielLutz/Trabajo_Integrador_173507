@@ -1,0 +1,55 @@
+<section class="mis-inscripciones container">
+	<header class="page-header">
+		<h1>Mis Inscripciones</h1>
+		<p class="subtitle">Revisa el estado de tus postulaciones y accede rápidamente al detalle de cada una.</p>
+	</header>
+
+	<app-loading *ngIf="loading"></app-loading>
+
+	<app-error-message
+		*ngIf="!loading && error"
+		[message]="error"
+	></app-error-message>
+
+	<ng-container *ngIf="!loading && !error">
+		<ng-container *ngIf="inscripciones.length; else emptyState">
+			<div class="inscripciones-grid">
+				<article
+					class="inscripcion-card"
+					*ngFor="let inscripcion of inscripciones; trackBy: trackByInscripcion"
+				>
+					<div class="card-header">
+						<div>
+							<h2>{{ inscripcion.tituloLlamado }}</h2>
+							<p class="departamento">{{ inscripcion.nombreDepartamento }}</p>
+						</div>
+						<span class="badge" [ngClass]="getEstadoBadgeClass(inscripcion.estado)">
+							{{ inscripcion.estado }}
+						</span>
+					</div>
+
+					<dl class="card-body">
+						<div class="info-row">
+							<dt>Fecha de inscripción</dt>
+							<dd>{{ inscripcion.fechaInscripcion | formatDate: 'dd/MM/yyyy HH:mm' }}</dd>
+						</div>
+					</dl>
+
+					<div class="card-actions">
+						<button class="btn btn-outline btn-small" type="button" (click)="verDetalle(inscripcion.id)">
+							Ver detalle
+						</button>
+					</div>
+				</article>
+			</div>
+		</ng-container>
+	</ng-container>
+
+	<ng-template #emptyState>
+		<div class="empty-state card">
+			<h3>No registras inscripciones</h3>
+			<p>Explora los llamados vigentes y postúlate para comenzar a ver tus inscripciones en este listado.</p>
+			<a class="btn btn-primary" routerLink="/llamados">Ver llamados activos</a>
+		</div>
+	</ng-template>
+</section>

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "src/app"
+  ],
+  "entryPointStrategy": "expand",
+  "tsconfig": "tsconfig.app.json",
+  "plugin": [
+    "typedoc-plugin-markdown"
+  ],
+  "out": "docs",
+  "hideGenerator": true,
+  "excludeExternals": true,
+  "readme": "none",
+  "githubPages": false
+}
